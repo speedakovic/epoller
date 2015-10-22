@@ -1,0 +1,51 @@
+/// @file   sigepoller.h
+/// @author speedak
+/// @brief  Signal file descriptor wrapper.
+
+#ifndef SIGEPOLLER_H
+#define SIGEPOLLER_H
+
+#include "epoller.h"
+#include "sys/signalfd.h"
+
+/// @brief Signal epoller.
+struct sigepoller : public epoller_event
+{
+	int                fd;      ///< signal file descriptor
+	struct epoller    *epoller; ///< parent epoller
+	struct epoll_event event;   ///< epoll event
+
+	/// @brief Handler for signal event.
+	/// @see #sighandler
+	/// @param sigepoller signal epoller within that the signal was received
+	int (*_sighandler) (struct sigepoller *sigepoller, struct signalfd_siginfo *siginfo);
+
+	/// @brief Constructor.
+	/// @param epoller parent epoller
+	sigepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), _sighandler(0) {}
+
+	/// @brief Destructor.
+	virtual ~sigepoller() {cleanup();}
+
+	/// @brief Initializes the signal epoller.
+	/// @param sigset set of signals accepted by the signal epoller
+	/// @return @c true if initialization was successful, otherwise @c false
+	virtual bool init(const sigset_t *sigset);
+
+	/// @brief Cleanups the signal epoller.
+	virtual void cleanup();
+
+	/// @copydoc epoller_event::handler
+	virtual int handler(struct epoller *epoller, struct epoll_event *revent);
+
+	/// @brief Called when signal is received.
+	///
+	/// Default implementation calls #_sighandler if not null, otherwise returns 0.
+	///
+	/// @param siginfo structure with information about the received signal
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	virtual int sighandler(struct signalfd_siginfo *siginfo);
+};
+
+#endif // SIGEPOLLER_H
+
