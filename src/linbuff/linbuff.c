@@ -1,4 +1,4 @@
-#include "linbuff.h"
+#include <linbuff/linbuff.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>

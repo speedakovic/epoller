@@ -5,8 +5,8 @@
 #ifndef SIGEPOLLER_H
 #define SIGEPOLLER_H
 
-#include "epoller.h"
-#include "sys/signalfd.h"
+#include <epoller/epoller.h>
+#include <sys/signalfd.h>
 
 /// @brief Signal epoller.
 struct sigepoller : public epoller_event

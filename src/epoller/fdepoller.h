@@ -5,8 +5,8 @@
 #ifndef FDEPOLLER_H
 #define FDEPOLLER_H
 
-#include "epoller.h"
-#include "linbuff.h"
+#include <epoller/epoller.h>
+#include <linbuff/linbuff.h>
 #include <string>
 
 /// @brief Generic file desciptor epoller.

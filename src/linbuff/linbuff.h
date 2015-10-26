@@ -2,13 +2,7 @@
  *
  * @file    linbuff.h
  * @author  speedak
- * @version 1.2
  * @brief   Simple linear buffer.
- *
- * history:
- * 1.2 - add useful macros
- * 1.1 - add extern C
- * 1.0 - first version
  *
  */
 

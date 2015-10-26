@@ -109,7 +109,7 @@ LDFLAGS += -shared $(SYSROOT_LDFLAGS)
 ################################################################################
 # Paths to header files
 ################################################################################
-INCPATHS = -I$(SRC_DIR_EPOLLER) -I$(SRC_DIR_LINBUFF)
+INCPATHS = -I$(SRC_DIR)
 
 
 
