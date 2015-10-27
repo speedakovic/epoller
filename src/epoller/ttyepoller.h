@@ -1,4 +1,4 @@
-/// @file   ttyepoller.h
+/// @file   epoller/ttyepoller.h
 /// @author speedak
 /// @brief  TTY file descriptor wrapper.
 

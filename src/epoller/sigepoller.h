@@ -1,4 +1,4 @@
-/// @file   sigepoller.h
+/// @file   epoller/sigepoller.h
 /// @author speedak
 /// @brief  Signal file descriptor wrapper.
 

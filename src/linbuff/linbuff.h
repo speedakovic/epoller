@@ -1,6 +1,6 @@
 /**
  *
- * @file    linbuff.h
+ * @file    linbuff/linbuff.h
  * @author  speedak
  * @brief   Simple linear buffer.
  *

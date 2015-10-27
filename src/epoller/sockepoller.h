@@ -1,4 +1,4 @@
-/// @file   sockepoller.h
+/// @file   epoller/sockepoller.h
 /// @author speedak
 /// @brief  Socket file descriptor wrapper.
 

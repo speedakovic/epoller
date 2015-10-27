@@ -1,4 +1,4 @@
-/// @file   timepoller.h
+/// @file   epoller/timepoller.h
 /// @author speedak
 /// @brief  Timer file descriptor wrapper.
 

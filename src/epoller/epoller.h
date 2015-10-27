@@ -1,4 +1,4 @@
-/// @file   epoller.h
+/// @file   epoller/epoller.h
 /// @author speedak
 /// @brief  Epoll file descriptor wrapper.
 

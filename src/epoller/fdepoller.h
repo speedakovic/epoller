@@ -1,4 +1,4 @@
-/// @file   fdepoller.h
+/// @file   epoller/fdepoller.h
 /// @author speedak
 /// @brief  Generic file descriptor wrapper.
 
