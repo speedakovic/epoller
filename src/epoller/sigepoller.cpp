@@ -37,6 +37,7 @@ bool sigepoller::init(const sigset_t *sigset)
 
 unwind_fd:
 	close(fd);
+	fd = -1;
 
 unwind:
 	return false;

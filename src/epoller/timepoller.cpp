@@ -37,6 +37,7 @@ bool timepoller::init(int clockid)
 
 unwind_fd:
 	close(fd);
+	fd = -1;
 
 unwind:
 	return false;
