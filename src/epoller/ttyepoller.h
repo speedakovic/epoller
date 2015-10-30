@@ -38,7 +38,7 @@ struct ttyepoller : public fdepoller
 	/// @param en
 	///
 	/// @see fdepoller::init
-	virtual bool open(std::string pathname, int flags, size_t rxsize = 1024, size_t txsize = 1024, bool rxen = true, bool txen = false, bool en = true);
+	virtual bool open(const std::string &pathname, int flags, size_t rxsize = 1024, size_t txsize = 1024, bool rxen = true, bool txen = false, bool en = true);
 
 	/// @brief Configures the tty as raw serial line.
 	///

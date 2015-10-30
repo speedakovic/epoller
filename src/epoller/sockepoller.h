@@ -162,7 +162,7 @@ struct sockepoller : public fdepoller
 	/// @brief Sets SO_BINDTODEVICE socket option.
 	/// @param dev name of network device (eth0, eth1, ...) the socket should be bound to
 	/// @return @c true if setting was successful, otherwise @c false
-	bool set_so_bindtodevice(std::string dev);
+	bool set_so_bindtodevice(const std::string &dev);
 
 	/// @brief Gets SO_BINDTODEVICE socket option.
 	/// @param dev

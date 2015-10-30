@@ -85,7 +85,7 @@ void fdepoller::cleanup()
 	fd = -1;
 }
 
-bool fdepoller::open(std::string pathname, int flags, size_t rxsize, size_t txsize, bool rxen, bool txen, bool en)
+bool fdepoller::open(const std::string &pathname, int flags, size_t rxsize, size_t txsize, bool rxen, bool txen, bool en)
 {
 	if (this->fd != -1)
 		return true;

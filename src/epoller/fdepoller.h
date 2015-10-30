@@ -124,7 +124,7 @@ struct fdepoller : public epoller_event
 	/// @param en
 	///
 	/// @return @c true if initialization was successful, otherwise @c false
-	virtual bool open(std::string pathname, int flags, size_t rxsize = 1024, size_t txsize = 1024, bool rxen = true, bool txen = false, bool en = true);
+	virtual bool open(const std::string &pathname, int flags, size_t rxsize = 1024, size_t txsize = 1024, bool rxen = true, bool txen = false, bool en = true);
 
 	/// @brief Cleanups the file descriptor epoller and closes the file descriptor
 	/// @see #cleanup

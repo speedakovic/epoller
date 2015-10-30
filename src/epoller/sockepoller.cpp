@@ -345,7 +345,7 @@ bool sockepoller::get_so_broadcast(bool *enabled)
 	return true;
 }
 
-bool sockepoller::set_so_bindtodevice(std::string dev)
+bool sockepoller::set_so_bindtodevice(const std::string &dev)
 {
 	if (setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, dev.c_str(), dev.length()) == -1) {
 		perror(DBG_PREFIX"setting SO_BINDTODEVICE failed");

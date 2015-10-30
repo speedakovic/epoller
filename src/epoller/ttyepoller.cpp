@@ -23,7 +23,7 @@ bool ttyepoller::init(int fd, size_t rxsize, size_t txsize, bool rxen, bool txen
 	return true;
 }
 
-bool ttyepoller::open(std::string pathname, int flags, size_t rxsize, size_t txsize, bool rxen, bool txen, bool en)
+bool ttyepoller::open(const std::string &pathname, int flags, size_t rxsize, size_t txsize, bool rxen, bool txen, bool en)
 {
 	if (this->fd != -1)
 		return true;
