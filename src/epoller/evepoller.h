@@ -1,4 +1,4 @@
-/// @file   evepoller.h
+/// @file   epoller/evepoller.h
 /// @author speedak
 /// @brief  Event file descriptor wrapper.
 

@@ -1,4 +1,4 @@
-/// @file   inotepoller.h
+/// @file   epoller/inotepoller.h
 /// @author speedak
 /// @brief  Inotify file descriptor wrapper.
 
