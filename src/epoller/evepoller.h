@@ -43,7 +43,7 @@ struct evepoller : public epoller_event
 	/// @brief Sends event.
 	/// @param cnt counter
 	/// @return @c true if sending was successful, otherwise @c false
-	virtual bool send(uint64_t cnt);
+	virtual bool send(uint64_t cnt = 1);
 
 	/// @brief Called when event is received.
 	///
