@@ -40,7 +40,7 @@ bool epoller::loop()
 {
 	int r, ret;
 
-	for(;;) {
+	while (!loop_exit) {
 
 		// call pre-epoll handler
 		if (pre_epoll_handler) {
@@ -85,8 +85,6 @@ bool epoller::loop()
 					return false;
 				}
 			}
-
-			continue;
 
 		} else {
 
@@ -140,5 +138,18 @@ bool epoller::loop()
 
 		}
 	}
+
+	// check exit type
+	if (loop_exit > 0)
+		return true;
+	else {
+		std::cerr << DBG_PREFIX"epoll exit with error was demanded" << std::endl;
+		return false;
+	}
+}
+
+void epoller::exit(int how)
+{
+	loop_exit = how;
 }
 

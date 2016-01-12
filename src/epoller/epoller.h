@@ -51,6 +51,7 @@ struct epoller
 {
 	int                 fd;           ///< epoll file descriptor
 	int                 timeout;      ///< epoll timeout in milliseconds (-1 for block indefinitely, 0 for return immediately)
+	int                 loop_exit;    ///< zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	size_t              revents_size; ///< size of array for returned events
 	struct epoll_event *revents;      ///< array for returned events
 
@@ -76,6 +77,7 @@ struct epoller
 	epoller() :
 	    fd                (-1                                   ),
 	    timeout           (-1                                   ),
+	    loop_exit         ( 0                                   ),
 	    revents_size      (EPOLLER_REVENTS_SIZE                 ),
 	    revents           (new epoll_event[EPOLLER_REVENTS_SIZE]),
 	    timeout_handler   ( 0                                   ),
@@ -89,6 +91,7 @@ struct epoller
 	epoller(size_t revents_size) :
 	    fd                (-1                           ),
 	    timeout           (-1                           ),
+	    loop_exit         ( 0                           ),
 	    revents_size      (revents_size                 ),
 	    revents           (new epoll_event[revents_size]),
 	    timeout_handler   ( 0                           ),
@@ -115,6 +118,9 @@ struct epoller
 	/// @return @c true for normal exit, @c false for exit caused by some error
 	virtual bool loop();
 
+	/// @brief Exits from the epoller's looper.
+	/// @param how positive for normal loop exit, negative for loop exit with error
+	virtual void exit(int how);
 };
 
 #endif // EPOLLER_H
