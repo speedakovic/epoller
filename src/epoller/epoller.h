@@ -8,6 +8,9 @@
 #include <cstddef>
 #include <sys/epoll.h>
 
+/// @brief Default number of events returned from epoll_wait.
+#define EPOLLER_REVENTS_SIZE 1
+
 /// @brief Epoller event.
 ///
 /// Every epoll_event added to the epoller's epoll file descriptor must have set its epoll_data_t data member to the
@@ -71,17 +74,18 @@ struct epoller
 
 	/// @brief Constructor.
 	epoller() :
-	    fd                (-1                ),
-	    timeout           (-1                ),
-	    revents_size      ( 1                ),
-	    revents           (new epoll_event[1]),
-	    timeout_handler   ( 0                ),
-	    pre_epoll_handler ( 0                ),
-	    post_epoll_handler( 0                ),
-	    revents_handler   ( 0                )
+	    fd                (-1                                   ),
+	    timeout           (-1                                   ),
+	    revents_size      (EPOLLER_REVENTS_SIZE                 ),
+	    revents           (new epoll_event[EPOLLER_REVENTS_SIZE]),
+	    timeout_handler   ( 0                                   ),
+	    pre_epoll_handler ( 0                                   ),
+	    post_epoll_handler( 0                                   ),
+	    revents_handler   ( 0                                   )
 	{}
 
 	/// @brief Constructor.
+	/// @param revents_size maximum number of events returned from epoll_wait.
 	epoller(size_t revents_size) :
 	    fd                (-1                           ),
 	    timeout           (-1                           ),
@@ -94,7 +98,7 @@ struct epoller
 	{}
 
 	/// @brief Destructor.
-	~epoller() {delete [] revents;}
+	virtual ~epoller() {delete [] revents;}
 
 	/// @brief Initializes the epoller.
 	///
@@ -102,14 +106,14 @@ struct epoller
 	/// modified or deleted.
 	///
 	/// @return @c true if initialization was successful, otherwise @c false
-	bool init();
+	virtual bool init();
 
 	/// @brief Cleanups the epoller.
-	void cleanup();
+	virtual void cleanup();
 
 	/// @brief Runs the epoller's looper.
 	/// @return @c true for normal exit, @c false for exit caused by some error
-	bool loop();
+	virtual bool loop();
 
 };
 
