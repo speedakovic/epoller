@@ -45,25 +45,29 @@ bool epoller::loop()
 		// call pre-epoll handler
 		if (pre_epoll_handler) {
 			r = pre_epoll_handler(this);
-			if (r > 0)
-				return true;
-			else if (r < 0) {
+			if (r > 0) {
+				loop_exit = 1;
+				break;
+			} else if (r < 0) {
 				std::cerr << DBG_PREFIX"pre_epoll_handler announces exit with error" << std::endl;
-				return false;
+				loop_exit = -1;
+				break;
 			}
 		}
 
 		// call epoll wait
-		ret = epoll_wait(fd, revents , revents_size, timeout);
+		ret = epoll_wait(fd, revents, revents_size, timeout);
 
 		// call post-epoll handler
 		if (post_epoll_handler) {
 			r = post_epoll_handler(this);
-			if (r > 0)
-				return true;
-			else if (r < 0) {
+			if (r > 0) {
+				loop_exit = 1;
+				break;
+			} else if (r < 0) {
 				std::cerr << DBG_PREFIX"post_epoll_handler announces exit with error" << std::endl;
-				return false;
+				loop_exit = -1;
+				break;
 			}
 		}
 
@@ -71,18 +75,21 @@ bool epoller::loop()
 
 			// error
 			perror(DBG_PREFIX"epoll waiting failed");
-			return false;
+			loop_exit = -1;
+			break;
 
 		} else if (ret == 0) {
 
 			// call timeout handler
 			if (timeout_handler) {
 				r = timeout_handler(this);
-				if (r > 0)
-					return true;
-				else if (r < 0) {
+				if (r > 0) {
+					loop_exit = 1;
+					break;
+				} else if (r < 0) {
 					std::cerr << DBG_PREFIX"timeout_handler announces exit with error" << std::endl;
-					return false;
+					loop_exit = -1;
+					break;
 				}
 			}
 
@@ -91,11 +98,13 @@ bool epoller::loop()
 			// call revents handler
 			if (revents_handler) {
 				r = revents_handler(this, revents, ret);
-				if (r > 0)
-					return true;
-				else if (r < 0) {
+				if (r > 0) {
+					loop_exit = 1;
+					break;
+				} else if (r < 0) {
 					std::cerr << DBG_PREFIX"revents_handler announces exit with error" << std::endl;
-					return false;
+					loop_exit = -1;
+					break;
 				}
 			}
 
@@ -106,9 +115,12 @@ bool epoller::loop()
 					ev->pthis = (struct epoller_event **) &revents[i].data.ptr;
 				else {
 					std::cerr << DBG_PREFIX"unexpected null pointer to epoll event" << std::endl;
-					return false;
+					loop_exit = -1;
+					break;
 				}
 			}
+			if (loop_exit)
+				break;
 
 			// call handler of each event
 			for (int i = 0; i < ret; ++i)
@@ -128,24 +140,20 @@ bool epoller::loop()
 					ev->pthis = 0;
 			}
 
-			// return if demanded
-			if (r > 0)
-				return true;
-			else if (r < 0) {
+			// exit if demanded
+			if (r > 0) {
+				loop_exit = 1;
+				break;
+			} else if (r < 0) {
 				std::cerr << DBG_PREFIX"epoll event handler announces exit with error" << std::endl;
-				return false;
+				loop_exit = -1;
+				break;
 			}
 
 		}
-	}
+	} // while (!loop_exit)
 
-	// check exit type
-	if (loop_exit > 0)
-		return true;
-	else {
-		std::cerr << DBG_PREFIX"epoll exit with error was demanded" << std::endl;
-		return false;
-	}
+	return loop_exit > 0;
 }
 
 void epoller::exit(int how)
