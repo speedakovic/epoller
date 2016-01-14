@@ -17,6 +17,22 @@ $(info DEBUG=$(DEBUG))
 
 
 ################################################################################
+# pkg-config configuration
+################################################################################
+ifdef SYSROOT_DIR
+    export PKG_CONFIG_DIR=
+    export PKG_CONFIG_LIBDIR=$(SYSROOT_DIR)/usr/lib/pkgconfig:$(SYSROOT_DIR)/usr/share/pkgconfig
+    export PKG_CONFIG_SYSROOT_DIR=$(SYSROOT_DIR)
+endif
+
+
+PKG_CONFIG      = pkg-config
+PKG_CONFIG_LIBS = glib-2.0
+
+
+
+
+################################################################################
 # Construct variables
 ################################################################################
 ifdef SYSROOT_DIR
@@ -63,11 +79,14 @@ $(SRC_DIR_LINBUFF)/linbuff.c
 
 CXXSRC =                           \
 $(SRC_DIR_EPOLLER)/epoller.cpp     \
+$(SRC_DIR_EPOLLER)/gepoller.cpp    \
+$(SRC_DIR_EPOLLER)/evepoller.cpp   \
 $(SRC_DIR_EPOLLER)/fdepoller.cpp   \
 $(SRC_DIR_EPOLLER)/sigepoller.cpp  \
-$(SRC_DIR_EPOLLER)/sockepoller.cpp \
 $(SRC_DIR_EPOLLER)/timepoller.cpp  \
-$(SRC_DIR_EPOLLER)/ttyepoller.cpp
+$(SRC_DIR_EPOLLER)/ttyepoller.cpp  \
+$(SRC_DIR_EPOLLER)/sockepoller.cpp \
+$(SRC_DIR_EPOLLER)/inotepoller.cpp
 
 
 
@@ -92,8 +111,8 @@ CPPFLAGS +=
 ################################################################################
 # Compiler flags
 ################################################################################
-CFLAGS   += -Wall -std=gnu89 -fPIC $(DEBUG_CFLAGX) $(SYSROOT_CFLAGS)
-CXXFLAGS += -Wall -std=c++98 -fPIC $(DEBUG_CXXFLAGS) $(SYSROOT_CXXFLAGS)
+CFLAGS   += -Wall -std=gnu89 -fPIC `$(PKG_CONFIG) --cflags $(PKG_CONFIG_LIBS)` $(DEBUG_CFLAGX) $(SYSROOT_CFLAGS)
+CXXFLAGS += -Wall -std=c++98 -fPIC `$(PKG_CONFIG) --cflags $(PKG_CONFIG_LIBS)` $(DEBUG_CXXFLAGS) $(SYSROOT_CXXFLAGS)
 
 
 
@@ -125,7 +144,7 @@ LIBPATHS =
 ################################################################################
 # Libraries
 ################################################################################
-LIBS =
+LIBS = `$(PKG_CONFIG) --libs $(PKG_CONFIG_LIBS)`
 
 
 
