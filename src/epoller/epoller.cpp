@@ -40,6 +40,7 @@ bool epoller::loop()
 {
 	int r, ret;
 
+	loop_exit = 0;
 	while (!loop_exit) {
 
 		// call pre-epoll handler
