@@ -14,7 +14,7 @@
  * @{
  */
 #define LINBUFF_VERSION_MAJOR 1
-#define LINBUFF_VERSION_MINOR 3
+#define LINBUFF_VERSION_MINOR 4
 /** @} */
 
 #endif /* VERSION_H */

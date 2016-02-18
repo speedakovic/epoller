@@ -23,6 +23,17 @@ bool linbuff_alloc(struct linbuff *lb, size_t size)
 		return false;
 }
 
+bool linbuff_realloc(struct linbuff *lb, size_t size)
+{
+	if (size > 0 && (lb->buff = realloc(lb->buff, size)) != NULL) {
+		lb->size = size;
+		lb->wrix = lb->wrix < size ? lb->wrix : size;
+		lb->rdix = lb->rdix < size ? lb->rdix : size;
+		return true;
+	} else
+		return false;
+}
+
 void linbuff_free(struct linbuff *lb)
 {
 	free(lb->buff);

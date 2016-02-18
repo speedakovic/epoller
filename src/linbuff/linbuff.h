@@ -80,6 +80,12 @@ void linbuff_wrap(struct linbuff *lb, void *buff, size_t size);
 bool linbuff_alloc(struct linbuff *lb, size_t size);
 
 /**
+ * @brief Reallocates internal buffer of given linear buffer.
+ * @return @c true if reallocation was successful, otherwise @c false
+ */
+bool linbuff_realloc(struct linbuff *lb, size_t size);
+
+/**
  * @brief Frees internal buffer.
  */
 void linbuff_free(struct linbuff *lb);
