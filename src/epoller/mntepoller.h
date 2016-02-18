@@ -1,0 +1,78 @@
+/// @file   epoller/mntepoller.h
+/// @author speedak
+/// @brief  Mount epoller.
+
+#ifndef MNTEPOLLER_H
+#define MNTEPOLLER_H
+
+#include <paths.h>
+#include <epoller/fdepoller.h>
+#include <list>
+#include <iostream>
+
+/// @brief Mount file entry. The members correspond with those
+///        ones in @c mntent structure defined in @c mntent.h.
+struct mntentry
+{
+	std::string fsname;   ///< name of mounted filesystem
+	std::string dir;      ///< filesystem path prefix
+	std::string type;     ///< mount type (see mntent.h)
+	std::string opts;     ///< mount options (see mntent.h)
+	int         freq;     ///< dump frequency in days
+	int         passno;   ///< pass number on parallel fsck
+};
+
+/// @brief Mount epoller. It waits for any change of mount file (typically @c /etc/mtab)
+///        and when the change occurs appropriate callback is called.
+struct mntepoller : public fdepoller
+{
+	/// @see change
+	/// @param mntepoller mount epoller within that the event occured
+	int (*_change) (struct mntepoller *mntepoller, const std::list<mntentry> &entries);
+
+	/// @brief Constructor.
+	/// @param epoller parent epoller
+	mntepoller(struct epoller *epoller) : fdepoller(epoller), _change(0) {
+		rx_auto_enable  = false;
+		rx_auto_disable = false;
+		tx_auto_enable  = false;
+		tx_auto_disable = false;
+	}
+
+	/// @brief Destructor.
+	virtual ~mntepoller() {}
+
+	/// @brief Opens mount file.
+	/// @param pathname mount file
+	/// @return @c true if opening was successful, otherwise @c false
+	virtual bool open(const std::string &pathname = _PATH_MOUNTED);
+
+	/// @brief This handler is called whenever mount file is available to be read.
+	///        Zero len means end of file and reception is disabled.
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	virtual int rx(int len);
+
+	/// @brief This handler is called whenever mount file has changed.
+	///        File is seeked to its beginning and reception is enabled.
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	virtual int err();
+
+	/// @brief This handler is called whenever whole mount file has been read.
+	///        This handler processes and frees rx buffer.
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	virtual int done();
+
+	/// @brief This handler is called whenever mount entries have changed.
+	///        Default implementation calls #_change if not null, otherwise returns 0.
+	/// @param entries mount entries
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	virtual int change(const std::list<mntentry> &entries);
+
+	/// @brief Prints mount entries.
+	/// @param entries mount entries
+	/// @param out output stream
+	static void print_mntentries(const std::list<mntentry> &entries, std::ostream &out = std::cout);
+};
+
+#endif // MNTEPOLLER_H
+
