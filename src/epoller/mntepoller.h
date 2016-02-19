@@ -68,6 +68,18 @@ struct mntepoller : public fdepoller
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int change(const std::list<mntentry> &entries);
 
+	/// @brief Finds mount entries by fsname.
+	/// @param entries entries to be searched
+	/// @param fsname entries to find
+	/// @return found entries
+	static std::list<mntentry> find_by_fsname(const std::list<mntentry> &entries, const std::string &fsname);
+
+	/// @brief Finds mount entries by dir.
+	/// @param entries entries to be searched
+	/// @param dir entries to find
+	/// @return found entries
+	static std::list<mntentry> find_by_dir(const std::list<mntentry> &entries, const std::string &dir);
+
 	/// @brief Prints mount entries.
 	/// @param entries mount entries
 	/// @param out output stream

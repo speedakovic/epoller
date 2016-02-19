@@ -80,6 +80,24 @@ int mntepoller::change(const std::list<mntentry> &entries)
 		return 0;
 }
 
+std::list<mntentry> mntepoller::find_by_fsname(const std::list<mntentry> &entries, const std::string &fsname)
+{
+	std::list<mntentry> result;
+	for (std::list<mntentry>::const_iterator it = entries.begin(); it != entries.end(); ++it)
+		if ((*it).fsname == fsname)
+			result.push_back(*it);
+	return result;
+}
+
+std::list<mntentry> mntepoller::find_by_dir(const std::list<mntentry> &entries, const std::string &dir)
+{
+	std::list<mntentry> result;
+	for (std::list<mntentry>::const_iterator it = entries.begin(); it != entries.end(); ++it)
+		if ((*it).dir == dir)
+			result.push_back(*it);
+	return result;
+}
+
 void mntepoller::print_mntentries(const std::list<mntentry> &entries, std::ostream &out)
 {
 	for (std::list<mntentry>::const_iterator it = entries.begin(); it != entries.end(); ++it)
