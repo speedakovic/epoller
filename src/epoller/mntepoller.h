@@ -68,6 +68,12 @@ struct mntepoller : public fdepoller
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int change(const std::list<mntentry> &entries);
 
+	/// @brief Reads mount file.
+	/// @param entries returned mount entries
+	/// @param pathname mount file
+	/// @return @c true if reading was successful, otherwise @c false
+	static bool read(std::list<mntentry> &entries, const std::string &pathname = _PATH_MOUNTED);
+
 	/// @brief Finds mount entries by fsname.
 	/// @param entries entries to be searched
 	/// @param fsname entries to find

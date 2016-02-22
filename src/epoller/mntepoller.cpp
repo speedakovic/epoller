@@ -2,9 +2,25 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string>
+#include <fstream>
 #include <sstream>
 
 #define DBG_PREFIX "mntepoller: "
+
+static inline mntentry parse_entry(const std::string sline)
+{
+	mntentry entry;
+	std::stringstream ssline(sline);
+
+	ssline >> entry.fsname;
+	ssline >> entry.dir;
+	ssline >> entry.type;
+	ssline >> entry.opts;
+	ssline >> entry.freq;
+	ssline >> entry.passno;
+
+	return entry;
+}
 
 bool mntepoller::open(const std::string &pathname)
 {
@@ -47,24 +63,12 @@ int mntepoller::err()
 
 int mntepoller::done()
 {
-	std::list<mntentry> entries;
 	std::string sline;
+	std::list<mntentry> entries;
 	std::stringstream sslines(std::string((char *)LINBUFF_RD_PTR(&rxbuff), linbuff_tord(&rxbuff)));
 
-	while (std::getline(sslines, sline)) {
-		mntentry entry;
-		std::string sitem;
-		std::stringstream ssline(sline);
-
-		ssline >> entry.fsname;
-		ssline >> entry.dir;
-		ssline >> entry.type;
-		ssline >> entry.opts;
-		ssline >> entry.freq;
-		ssline >> entry.passno;
-
-		entries.push_back(entry);
-	}
+	while (std::getline(sslines, sline))
+		entries.push_back(parse_entry(sline));
 
 	change(entries);
 	linbuff_clear(&rxbuff);
@@ -78,6 +82,23 @@ int mntepoller::change(const std::list<mntentry> &entries)
 		return _change(this, entries);
 	else
 		return 0;
+}
+
+bool mntepoller::read(std::list<mntentry> &entries, const std::string &pathname)
+{
+	entries.clear();
+
+	std::ifstream ifs(pathname.c_str());
+	if (!ifs.is_open()) {
+		std::cerr << DBG_PREFIX"opening " << pathname << " failed" << std::endl;
+		return false;
+	}
+
+	std::string sline;
+	while (std::getline(ifs, sline))
+		entries.push_back(parse_entry(sline));
+
+	return true;
 }
 
 std::list<mntentry> mntepoller::find_by_fsname(const std::list<mntentry> &entries, const std::string &fsname)
