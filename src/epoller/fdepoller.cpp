@@ -1,5 +1,6 @@
 #include <epoller/fdepoller.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <unistd.h>
 #include <iostream>
 #include <cstdio>
@@ -377,6 +378,47 @@ int fdepoller::epoll_err()
 int fdepoller::epoll_unknown(int events)
 {
 	return un(events);
+}
+
+ssize_t fdepoller::write_stream(const void *buff, size_t len)
+{
+	ssize_t ret = 0;
+
+	if (!linbuff_tord(&txbuff)) {
+		// linear buffer is empty, so try to write data directly to file descriptor
+
+		ret = write(fd, buff, len);
+		if (ret > 0)
+			// something written
+			len -= ret;
+		else if (ret == 0)
+			// nothing written
+			;
+		else if (errno == EWOULDBLOCK)
+			// fd buffer full
+			ret = 0;
+		else
+			// fd error
+			return -1;
+	}
+
+	// write remaining data to linear buffer
+	ret += linbuff_write(&txbuff, buff, len);
+
+	// enable transmitting if there are pending data in linear buffer
+	if (linbuff_tord(&txbuff))
+		enable_tx();
+
+	// return number of written bytes
+	return ret;
+}
+
+ssize_t fdepoller::write_dgram(const void *buff, size_t len)
+{
+	if (linbuff_towr(&txbuff) < len)
+		return 0;
+
+	return write_stream(buff, len) == (ssize_t) len ? len : -1;
 }
 
 int fdepoller::handler(struct epoller *epoller, struct epoll_event *revent)

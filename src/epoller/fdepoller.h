@@ -256,6 +256,26 @@ struct fdepoller : public epoller_event
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int epoll_unknown(int events);
 
+	/// @brief Writes bytes in stream way.
+	///        At first the bytes are written direct to file descriptor (but only if linear buffer is empty),
+	///        secondly the remaining bytes are written to linear buffer.
+	///        This method may block, but only during direct writing to file descriptor, which is marked as blocking.
+	/// @param buff buffer
+	/// @param len length of buffer
+	/// @return number of written bytes (>=0) or -1 if something failed
+	virtual ssize_t write_stream(const void *buff, size_t len);
+
+	/// @brief Writes bytes in datagram way (everything or nothing).
+	///        At first the bytes are written direct to file descriptor (but only if linear buffer is empty),
+	///        secondly the remaining bytes are written to linear buffer.
+	///        The only difference from write_stream is that there is a check for length of linear buffer, which
+	///        has to be equal or greater than length of passed buffer.
+	///        This method may block, but only during direct writing to file descriptor, which is marked as blocking.
+	/// @param buff buffer
+	/// @param len length of buffer
+	/// @return number of written bytes (=0 or =len) or -1 if something failed
+	virtual ssize_t write_dgram(const void *buff, size_t len);
+
 	/// @copydoc epoller_event::handler
 	virtual int handler(struct epoller *epoller, struct epoll_event *revent);
 };
