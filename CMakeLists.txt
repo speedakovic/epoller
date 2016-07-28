@@ -47,9 +47,9 @@ if(GLIB_FOUND)
     target_link_libraries(epoller ${GLIB_LIBRARIES})
 endif(GLIB_FOUND)
 
-install(TARGETS epoller DESTINATION /usr/lib)
-install(FILES ${HEADERS_EPOLLER} DESTINATION /usr/include/epoller)
-install(FILES ${HEADERS_LINBUFF} DESTINATION /usr/include/linbuff)
+install(TARGETS epoller DESTINATION lib)
+install(FILES ${HEADERS_EPOLLER} DESTINATION include/epoller)
+install(FILES ${HEADERS_LINBUFF} DESTINATION include/linbuff)
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
