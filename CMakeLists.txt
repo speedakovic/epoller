@@ -54,6 +54,12 @@ install(TARGETS epoller DESTINATION lib)
 install(FILES ${HEADERS_EPOLLER} DESTINATION include/epoller)
 install(FILES ${HEADERS_LINBUFF} DESTINATION include/linbuff)
 
+if(PKG_CONFIG_FOUND)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pkgconfig/epoller.pc.in
+                   ${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/epoller.pc @ONLY)
+    install(FILES  ${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/epoller.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
+endif(PKG_CONFIG_FOUND)
+
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
     set(DOXYGEN_INPUT                  "${CMAKE_CURRENT_SOURCE_DIR}/include/epoller")

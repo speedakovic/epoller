@@ -1,0 +1,10 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: @CMAKE_PROJECT_NAME@
+Description: Tiny event system based on epoll
+Version: @EPOLLER_VERSION_MAJOR@.@EPOLLER_VERSION_MINOR@
+Libs: -L${libdir} -lepoller
+Cflags: -I${includedir}
