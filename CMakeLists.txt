@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(epoller)
 
+set(EPOLLER_VERSION_MAJOR 1)
+set(EPOLLER_VERSION_MINOR 1)
+
 find_package(PkgConfig)
 if(PKG_CONFIG_FOUND)
     pkg_check_modules(GLIB glib-2.0)
