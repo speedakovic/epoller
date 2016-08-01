@@ -46,7 +46,7 @@ include_directories(include)
 add_library(epoller SHARED ${SOURCES_EPOLLER} ${SOURCES_LINBUFF})
 
 if(GLIB_FOUND)
-    target_compile_options(epoller PUBLIC ${GLIB_CFLAGS})
+    include_directories(${GLIB_INCLUDE_DIRS})
     target_link_libraries(epoller ${GLIB_LIBRARIES})
 endif(GLIB_FOUND)
 
