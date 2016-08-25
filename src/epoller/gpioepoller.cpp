@@ -46,7 +46,7 @@ bool gpioepoller::open(int gpio, int flags)
 	return open(path.str(), flags);
 }
 
-bool gpioepoller::set_value(int value)
+bool gpioepoller::set(int value)
 {
 	if (lseek(fd, 0, SEEK_SET) == (off_t) -1) {
 		perror(DBG_PREFIX"seeking failed");
@@ -61,7 +61,7 @@ bool gpioepoller::set_value(int value)
 	return true;
 }
 
-bool gpioepoller::get_value(int *value)
+bool gpioepoller::get(int *value)
 {
 	if (lseek(fd, 0, SEEK_SET) == (off_t) -1) {
 		perror(DBG_PREFIX"seeking failed");
@@ -258,5 +258,57 @@ bool gpioepoller::get_edge(int gpio, gpioepoller::EDGE *edge)
 	std::stringstream path;
 	path << GPIO_DIR << "/gpio" << gpio << "/edge";
 	return get_edge(path.str(), edge);
+}
+
+bool gpioepoller::set_value(const std::string &pathname, int value)
+{
+	int fd = ::open(pathname.c_str(), O_WRONLY);
+	if (fd == -1) {
+		perror(DBG_PREFIX"opening value file failed");
+		return false;
+	}
+
+	if (write(fd, value ? "1" : "0", 1) != 1) {
+		perror(DBG_PREFIX"writing value file failed");
+		::close(fd);
+		return false;
+	}
+
+	::close(fd);
+	return true;
+}
+
+bool gpioepoller::set_value(int gpio, int value)
+{
+	std::stringstream path;
+	path << GPIO_DIR << "/gpio" << gpio << "/value";
+	return set_value(path.str(), value);
+}
+
+bool gpioepoller::get_value(const std::string &pathname, int *value)
+{
+	int fd = ::open(pathname.c_str(), O_RDONLY);
+	if (fd == -1) {
+		perror(DBG_PREFIX"opening value file failed");
+		return false;
+	}
+
+	if (read(fd, value, 1) != 1) {
+		perror(DBG_PREFIX"reading value file failed");
+		::close(fd);
+		return false;
+	}
+
+	*value = *((char*)value) == '0' ? 0 : 1;
+
+	::close(fd);
+	return true;
+}
+
+bool gpioepoller::get_value(int gpio, int *value)
+{
+	std::stringstream path;
+	path << GPIO_DIR << "/gpio" << gpio << "/value";
+	return get_value(path.str(), value);
 }
 

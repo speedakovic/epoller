@@ -53,12 +53,12 @@ struct gpioepoller : public fdepoller
 	/// @brief Sets gpio value.
 	/// @param value gpio value, zero is interpreted as '0', nonzero as '1'
 	/// @return @c true if setting was successful, otherwise @c false
-	virtual bool set_value(int value);
+	virtual bool set(int value);
 
 	/// @brief Gets gpio value.
 	/// @param value gpio value, 0 or 1
 	/// @return @c true if getting was successful, otherwise @c false
-	virtual bool get_value(int *value);
+	virtual bool get(int *value);
 
 	/// @brief Enables gpio interrupts.
 	/// @return @c true if enabling was successful, otherwise @c false
@@ -129,6 +129,30 @@ struct gpioepoller : public fdepoller
 	/// @param edge edge
 	/// @return @c true if getting was successful, otherwise @c false
 	static bool get_edge(int gpio, gpioepoller::EDGE *edge);
+
+	/// @brief Sets gpio value.
+	/// @param pathname name of the gpio's value file
+	/// @param value value, zero is interpreted as '0', nonzero as '1'
+	/// @return @c true if setting was successful, otherwise @c false
+	static bool set_value(const std::string &pathname, int value);
+
+	/// @brief Sets gpio value.
+	/// @param gpio gpio number
+	/// @param value value, zero is interpreted as '0', nonzero as '1'
+	/// @return @c true if setting was successful, otherwise @c false
+	static bool set_value(int gpio, int value);
+
+	/// @brief Gets gpio value.
+	/// @param pathname name of the gpio's value file
+	/// @param value value, 0 or 1
+	/// @return @c true if getting was successful, otherwise @c false
+	static bool get_value(const std::string &pathname, int *value);
+
+	/// @brief Gets gpio value.
+	/// @param gpio gpio number
+	/// @param value value, 0 or 1
+	/// @return @c true if getting was successful, otherwise @c false
+	static bool get_value(int gpio, int *value);
 };
 
 #endif // GPIOEPOLLER_H
