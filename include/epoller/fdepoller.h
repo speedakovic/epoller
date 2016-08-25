@@ -24,6 +24,7 @@ struct fdepoller : public epoller_event
 	bool               tx_auto_disable; ///< auto tx disable flag
 	unsigned long      epoll_in_cnt;    ///< EPOLLIN counter
 	unsigned long      epoll_out_cnt;   ///< EPOLLOUT counter
+	unsigned long      epoll_pri_cnt;   ///< EPOLLPRI counter
 	unsigned long      epoll_hup_cnt;   ///< EPOLLHUP counter
 	unsigned long      epoll_err_cnt;   ///< EPOLLERR counter
 
@@ -36,6 +37,11 @@ struct fdepoller : public epoller_event
 	/// @see #tx
 	/// @param fdepoller file descriptor epoller within that the event occured
 	int (*_tx) (struct fdepoller *fdepoller, int len);
+
+	/// @brief Handler for pri events.
+	/// @see #pri
+	/// @param fdepoller file descriptor epoller within that the event occured
+	int (*_pri) (struct fdepoller *fdepoller);
 
 	/// @brief Handler for hup events.
 	/// @see #hup
@@ -77,10 +83,12 @@ struct fdepoller : public epoller_event
 	    tx_auto_disable (true   ),
 	    epoll_in_cnt    (0      ),
 	    epoll_out_cnt   (0      ),
+	    epoll_pri_cnt   (0      ),
 	    epoll_hup_cnt   (0      ),
 	    epoll_err_cnt   (0      ),
 	    _rx             (0      ),
 	    _tx             (0      ),
+	    _pri            (0      ),
 	    _hup            (0      ),
 	    _err            (0      ),
 	    _un             (0      ),
@@ -94,7 +102,7 @@ struct fdepoller : public epoller_event
 	/// @brief Initializes the file descriptor epoller.
 	///
 	/// After successful initialization #fd, #event, #rxbuff, #txbuff,
-	/// #epoll_in_cnt, #epoll_out_cnt, #epoll_hup_cnt and #epoll_err_cnt  members are initialized.
+	/// #epoll_in_cnt, #epoll_out_cnt, #epoll_pri_cnt, #epoll_hup_cnt and #epoll_err_cnt  members are initialized.
 	///
 	/// @param fd file descriptor
 	/// @param rxsize size of rx buffer in bytes, allowed to be zero, but rxen must be @c false
@@ -133,8 +141,9 @@ struct fdepoller : public epoller_event
 	/// @brief Enables the file descriptor epoller by adding to parent epoller.
 	/// @param rxen if @c true the reception will be enabled (by adding EPOLLIN event to epoller)
 	/// @param txen if @c true the transmission will be enabled (by adding EPOLLOUT event to epoller)
+	/// @param prien if @c true the announcing of urgent data will be enabled (by adding EPOLLPRI event to epoller)
 	/// @return @c true if enabling was successful, otherwise @c false
-	bool enable(bool rxen = true, bool txen = false);
+	bool enable(bool rxen = true, bool txen = false, bool prien = false);
 
 	/// @brief Disables the file descriptor epoller by removing from parent epoller.
 	/// @return @c true if disabling was successful, otherwise @c false
@@ -155,6 +164,14 @@ struct fdepoller : public epoller_event
 	/// @brief Enables writing by adding EPOLLOUT event to epoller.
 	/// @return @c true if enabling was successful, otherwise @c false
 	bool enable_tx();
+
+	/// @brief Disables announcing of urgent data by removing EPOLLPRI event from epoller.
+	/// @return @c true if disabling was successful, otherwise @c false
+	bool disable_pri();
+
+	/// @brief Enables announcing of urgent data by adding EPOLLPRI event to epoller.
+	/// @return @c true if enabling was successful, otherwise @c false
+	bool enable_pri();
 
 	/// @brief Sets file descriptor flags.
 	///
@@ -196,6 +213,13 @@ struct fdepoller : public epoller_event
 	/// @param len length of just transmitted data if zero or positive, error state if negative
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int tx(int len);
+
+	/// @brief Called if ugent-data event occurred.
+	///
+	/// Default implementation calls #_pri if not null, otherwise returns -1.
+	///
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	virtual int pri();
 
 	/// @brief Called if hang-out event occurred.
 	///
@@ -242,6 +266,10 @@ struct fdepoller : public epoller_event
 	/// @brief EPOLLOUT event handler.
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int epoll_out();
+
+	/// @brief EPOLLPRI event handler.
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	virtual int epoll_pri();
 
 	/// @brief EPOLLHUP event handler.
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error

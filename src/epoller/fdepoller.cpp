@@ -23,6 +23,7 @@ bool fdepoller::init(int fd, size_t rxsize, size_t txsize, bool rxen, bool txen,
 	this->fd = fd;
 	epoll_in_cnt  = 0;
 	epoll_out_cnt = 0;
+	epoll_pri_cnt = 0;
 	epoll_hup_cnt = 0;
 	epoll_err_cnt = 0;
 
@@ -115,7 +116,7 @@ void fdepoller::close()
 	::close(fd);
 }
 
-bool fdepoller::enable(bool rxen, bool txen)
+bool fdepoller::enable(bool rxen, bool txen, bool prien)
 {
 	if (enabled)
 		return true;
@@ -126,6 +127,8 @@ bool fdepoller::enable(bool rxen, bool txen)
 		event.events |= EPOLLIN;
 	if (txen)
 		event.events |= EPOLLOUT;
+	if (prien)
+		event.events |= EPOLLPRI;
 	int ret = epoll_ctl(epoller->fd, EPOLL_CTL_ADD, fd, &event);
 	if (ret == -1) {
 		perror(DBG_PREFIX"adding file descriptor to parent epoller failed");
@@ -198,6 +201,32 @@ bool fdepoller::enable_tx()
 	event.events |= EPOLLOUT;
 	if (epoll_ctl(epoller->fd, EPOLL_CTL_MOD, fd, &event) == -1) {
 		perror(DBG_PREFIX"modifying within epoller (set EPOLLOUT) failed");
+		return false;
+	} else
+		return true;
+}
+
+bool fdepoller::disable_pri()
+{
+	if (!(event.events & EPOLLPRI))
+		return true;
+
+	event.events &= ~EPOLLPRI;
+	if (epoll_ctl(epoller->fd, EPOLL_CTL_MOD, fd, &event) == -1) {
+		perror(DBG_PREFIX"modifying within epoller (clear EPOLLPRI) failed");
+		return false;
+	} else
+		return true;
+}
+
+bool fdepoller::enable_pri()
+{
+	if (event.events & EPOLLPRI)
+		return true;
+
+	event.events |= EPOLLPRI;
+	if (epoll_ctl(epoller->fd, EPOLL_CTL_MOD, fd, &event) == -1) {
+		perror(DBG_PREFIX"modifying within epoller (set EPOLLPRI) failed");
 		return false;
 	} else
 		return true;
@@ -283,6 +312,16 @@ int fdepoller::tx(int len)
 	}
 }
 
+int fdepoller::pri()
+{
+	if (_pri)
+		return _pri(this);
+	else {
+		std::cerr << DBG_PREFIX"urgent-data event" << std::endl;
+		return -1;
+	}
+}
+
 int fdepoller::hup()
 {
 	if (_hup)
@@ -365,6 +404,11 @@ int fdepoller::epoll_out()
 	}
 }
 
+int fdepoller::epoll_pri()
+{
+	return pri();
+}
+
 int fdepoller::epoll_hup()
 {
 	return hup();
@@ -442,6 +486,14 @@ int fdepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 		revent->events &= ~EPOLLOUT;
 		epoll_out_cnt++;
 		ret = epoll_out();
+		if (ret || !*pthis)
+			return ret;
+	}
+
+	if (revent->events & EPOLLPRI) {
+		revent->events &= ~EPOLLPRI;
+		epoll_pri_cnt++;
+		ret = epoll_pri();
 		if (ret || !*pthis)
 			return ret;
 	}
