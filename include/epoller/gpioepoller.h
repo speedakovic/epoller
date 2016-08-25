@@ -10,6 +10,20 @@
 /// @brief sysfs gpio's value file wrapper.
 struct gpioepoller : public fdepoller
 {
+	/// @brief gpio direction
+	enum DIRECTION {
+		DIRECTION_IN,  ///< input
+		DIRECTION_OUT  ///< output
+	};
+
+	/// @brief gpio edge
+	enum EDGE {
+		EDGE_NONE,    ///< none
+		EDGE_RISING,  ///< rising
+		EDGE_FALLING, ///< falling
+		EDGE_BOTH     ///< both
+	};
+
 	/// @brief Gpio irq handler.
 	/// @see #irq
 	/// @param irqepoller gpio epoller within that the irq occured
@@ -20,13 +34,13 @@ struct gpioepoller : public fdepoller
 	gpioepoller(struct epoller *epoller) : fdepoller(epoller) {}
 
 	/// @brief Initializes the gpio epoller.
-	/// @param fd file descriptor
+	/// @param fd file descriptor of the gpio's value file
 	/// @return @c true if initialization was successful, otherwise @c false
 	virtual bool init(int fd);
 
 	/// @brief Opens file and initializes the gpio epoller.
 	/// @see #init
-	/// @param pathname name of the file to be open
+	/// @param pathname name of the gpio's value file
 	/// @param flags O_RDONLY, O_WRONLY, O_RDWR, ... (see doc for posix open)
 	virtual bool open(const std::string &pathname, int flags);
 
@@ -67,6 +81,54 @@ struct gpioepoller : public fdepoller
 	/// @brief EPOLLERR event handler.
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int epoll_err();
+
+	/// @brief Sets gpio direction.
+	/// @param pathname name of the gpio's direction file
+	/// @param direction direction
+	/// @return @c true if setting was successful, otherwise @c false
+	static bool set_direction(const std::string &pathname, gpioepoller::DIRECTION direction);
+
+	/// @brief Sets gpio direction.
+	/// @param gpio gpio number
+	/// @param direction direction
+	/// @return @c true if setting was successful, otherwise @c false
+	static bool set_direction(int gpio, gpioepoller::DIRECTION direction);
+
+	/// @brief Gets gpio direction.
+	/// @param pathname name of the gpio's direction file
+	/// @param direction direction
+	/// @return @c true if getting was successful, otherwise @c false
+	static bool get_direction(const std::string &pathname, gpioepoller::DIRECTION *direction);
+
+	/// @brief Gets gpio direction.
+	/// @param gpio gpio number
+	/// @param direction direction
+	/// @return @c true if getting was successful, otherwise @c false
+	static bool get_direction(int gpio, gpioepoller::DIRECTION *direction);
+
+	/// @brief Sets gpio edge.
+	/// @param pathname name of the gpio's edge file
+	/// @param edge edge
+	/// @return @c true if setting was successful, otherwise @c false
+	static bool set_edge(const std::string &pathname, gpioepoller::EDGE edge);
+
+	/// @brief Sets gpio edge.
+	/// @param gpio gpio number
+	/// @param edge edge
+	/// @return @c true if setting was successful, otherwise @c false
+	static bool set_edge(int gpio, gpioepoller::EDGE edge);
+
+	/// @brief Gets gpio edge.
+	/// @param pathname name of the gpio's edge file
+	/// @param edge edge
+	/// @return @c true if getting was successful, otherwise @c false
+	static bool get_edge(const std::string &pathname, gpioepoller::EDGE *edge);
+
+	/// @brief Gets gpio edge.
+	/// @param gpio gpio number
+	/// @param edge edge
+	/// @return @c true if getting was successful, otherwise @c false
+	static bool get_edge(int gpio, gpioepoller::EDGE *edge);
 };
 
 #endif // GPIOEPOLLER_H

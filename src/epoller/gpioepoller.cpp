@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <cstdio>
+#include <cstring>
 #include <sstream>
 #include <iostream>
 
@@ -99,5 +100,163 @@ int gpioepoller::epoll_pri()
 int gpioepoller::epoll_err()
 {
 	return 0;
+}
+
+bool gpioepoller::set_direction(const std::string &pathname, gpioepoller::DIRECTION direction)
+{
+	int fd = ::open(pathname.c_str(), O_WRONLY);
+	if (fd == -1) {
+		perror(DBG_PREFIX"opening direction file failed");
+		return false;
+	}
+
+	char *buff = 0;
+
+	if (direction == DIRECTION_IN)
+		buff = (char*) "in";
+	else if (direction == DIRECTION_OUT)
+		buff = (char*) "out";
+	else {
+		std::cerr << DBG_PREFIX"invalid direction" << std::endl;
+		::close(fd);
+		return false;
+	}
+
+	if (write(fd, buff, strlen(buff)) != strlen(buff)) {
+		perror(DBG_PREFIX"writing direction file failed");
+		::close(fd);
+		return false;
+	}
+
+	::close(fd);
+	return true;
+}
+
+bool gpioepoller::set_direction(int gpio, gpioepoller::DIRECTION direction)
+{
+	std::stringstream path;
+	path << GPIO_DIR << "/gpio" << gpio << "/direction";
+	return set_direction(path.str(), direction);
+}
+
+bool gpioepoller::get_direction(const std::string &pathname, gpioepoller::DIRECTION *direction)
+{
+	int fd = ::open(pathname.c_str(), O_RDONLY);
+	if (fd == -1) {
+		perror(DBG_PREFIX"opening direction file failed");
+		return false;
+	}
+
+	char buff[3] = {};
+
+	int ret = read(fd, buff, sizeof(buff));
+	if (ret == -1) {
+		perror(DBG_PREFIX"reading direction file failed");
+		::close(fd);
+		return false;
+	}
+
+	if (!memcmp(buff, "in", 2))
+		*direction = DIRECTION_IN;
+	else if (!memcmp(buff, "out", 3))
+		*direction = DIRECTION_OUT;
+	else {
+		std::cerr << DBG_PREFIX"unknown value in direction file" << std::endl;
+		::close(fd);
+		return false;
+	}
+
+	::close(fd);
+	return true;
+}
+
+bool gpioepoller::get_direction(int gpio, gpioepoller::DIRECTION *direction)
+{
+	std::stringstream path;
+	path << GPIO_DIR << "/gpio" << gpio << "/direction";
+	return get_direction(path.str(), direction);
+}
+
+bool gpioepoller::set_edge(const std::string &pathname, gpioepoller::EDGE edge)
+{
+	int fd = ::open(pathname.c_str(), O_WRONLY);
+	if (fd == -1) {
+		perror(DBG_PREFIX"opening edge file failed");
+		return false;
+	}
+
+	char *buff = 0;
+
+	if (edge == EDGE_NONE)
+		buff = (char*) "none";
+	else if (edge == EDGE_RISING)
+		buff = (char*) "rising";
+	else if (edge == EDGE_FALLING)
+		buff = (char*) "falling";
+	else if (edge == EDGE_BOTH)
+		buff = (char*) "both";
+	else {
+		std::cerr << DBG_PREFIX"invalid edge" << std::endl;
+		::close(fd);
+		return false;
+	}
+
+	if (write(fd, buff, strlen(buff)) != strlen(buff)) {
+		perror(DBG_PREFIX"writing edge file failed");
+		::close(fd);
+		return false;
+	}
+
+	::close(fd);
+	return true;
+}
+
+bool gpioepoller::set_edge(int gpio, gpioepoller::EDGE edge)
+{
+	std::stringstream path;
+	path << GPIO_DIR << "/gpio" << gpio << "/edge";
+	return set_edge(path.str(), edge);
+}
+
+bool gpioepoller::get_edge(const std::string &pathname, gpioepoller::EDGE *edge)
+{
+	int fd = ::open(pathname.c_str(), O_RDONLY);
+	if (fd == -1) {
+		perror(DBG_PREFIX"opening edge file failed");
+		return false;
+	}
+
+	char buff[7] = {};
+
+	int ret = read(fd, buff, sizeof(buff));
+	if (ret == -1) {
+		perror(DBG_PREFIX"reading edge file failed");
+		::close(fd);
+		return false;
+	}
+
+	if (!memcmp(buff, "none", 4))
+		*edge = EDGE_NONE;
+	else if (!memcmp(buff, "rising", 6))
+		*edge = EDGE_RISING;
+	else if (!memcmp(buff, "falling", 7))
+		*edge = EDGE_FALLING;
+	else if (!memcmp(buff, "both", 4))
+		*edge = EDGE_BOTH;
+	else {
+		std::cerr << DBG_PREFIX"unknown value in edge file" << std::endl;
+		::close(fd);
+		return false;
+	}
+
+	::close(fd);
+	return true;
+}
+
+bool gpioepoller::get_edge(int gpio, gpioepoller::EDGE *edge)
+{
+	std::stringstream path;
+	path << GPIO_DIR << "/gpio" << gpio << "/edge";
+	return get_edge(path.str(), edge);
 }
 
