@@ -12,8 +12,10 @@ struct gpioepoller : public fdepoller
 {
 	/// @brief gpio direction
 	enum DIRECTION {
-		DIRECTION_IN,  ///< input
-		DIRECTION_OUT  ///< output
+		DIRECTION_IN,   ///< input
+		DIRECTION_OUT,  ///< output
+		DIRECTION_LOW,  ///< output low
+		DIRECTION_HIGH, ///< output high
 	};
 
 	/// @brief gpio edge

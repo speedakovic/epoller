@@ -116,6 +116,10 @@ bool gpioepoller::set_direction(const std::string &pathname, gpioepoller::DIRECT
 		buff = (char*) "in";
 	else if (direction == DIRECTION_OUT)
 		buff = (char*) "out";
+	else if (direction == DIRECTION_LOW)
+		buff = (char*) "low";
+	else if (direction == DIRECTION_HIGH)
+		buff = (char*) "high";
 	else {
 		std::cerr << DBG_PREFIX"invalid direction" << std::endl;
 		::close(fd);
