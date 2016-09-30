@@ -126,7 +126,7 @@ bool gpioepoller::set_direction(const std::string &pathname, gpioepoller::DIRECT
 		return false;
 	}
 
-	if (write(fd, buff, strlen(buff)) != strlen(buff)) {
+	if ((size_t) write(fd, buff, strlen(buff)) != strlen(buff)) {
 		perror(DBG_PREFIX"writing direction file failed");
 		::close(fd);
 		return false;
@@ -205,7 +205,7 @@ bool gpioepoller::set_edge(const std::string &pathname, gpioepoller::EDGE edge)
 		return false;
 	}
 
-	if (write(fd, buff, strlen(buff)) != strlen(buff)) {
+	if ((size_t) write(fd, buff, strlen(buff)) != strlen(buff)) {
 		perror(DBG_PREFIX"writing edge file failed");
 		::close(fd);
 		return false;
