@@ -69,6 +69,13 @@ struct sockepoller : public fdepoller
 	/// @return @c true if socket was successfully bound, otherwise @c false
 	virtual bool bind(const std::string &ip, unsigned short port);
 
+	/// @brief Accepts connection request.
+	/// @param addr address of the peer socket (allowed to be NULL)
+	/// @param addrlen must be initialized with size of space pointed by addr argument, on return it will
+	///                contain actual size of the peer socket (allowed to be NULL if addr argument is NULL as well)
+	/// @return non-negative socket descriptor or -1 if accepting failed
+	virtual int accept(struct sockaddr *addr, socklen_t *addrlen);
+
 	/// @brief Connects socket of AF_INET/AF_INET6 domain.
 	///
 	/// For TCP socket:

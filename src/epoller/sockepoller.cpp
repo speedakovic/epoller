@@ -81,6 +81,17 @@ bool sockepoller::bind(const std::string &ip, unsigned short port)
 	return true;
 }
 
+int sockepoller::accept(struct sockaddr *addr, socklen_t *addrlen)
+{
+	int new_fd = ::accept(fd, addr, addrlen);
+	if (new_fd == -1) {
+		perror(DBG_PREFIX"accepting on socket epoller failed");
+		return -1;
+	}
+
+	return new_fd;
+}
+
 bool sockepoller::connect(const std::string &ip, unsigned short port)
 {
 	int ret, flags;
