@@ -434,7 +434,7 @@ ssize_t fdepoller::write_stream(const void *buff, size_t len)
 		ret = write(fd, buff, len);
 		if (ret > 0)
 			// something written
-			len -= ret;
+			;
 		else if (ret == 0)
 			// nothing written
 			;
@@ -447,7 +447,7 @@ ssize_t fdepoller::write_stream(const void *buff, size_t len)
 	}
 
 	// write remaining data to linear buffer
-	ret += linbuff_write(&txbuff, buff, len);
+	ret += linbuff_write(&txbuff, (uint8_t *)buff + ret, len - ret);
 
 	// enable transmitting if there are pending data in linear buffer
 	if (linbuff_tord(&txbuff))
