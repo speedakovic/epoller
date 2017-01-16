@@ -29,7 +29,7 @@ struct gpioepoller : public fdepoller
 	/// @brief Gpio irq handler.
 	/// @see #irq
 	/// @param irqepoller gpio epoller within that the irq occured
-	int (*_irq) (struct gpioepoller *gpioepoller);
+	int (*_irq) (struct gpioepoller *gpioepoller, int value);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller
@@ -72,8 +72,9 @@ struct gpioepoller : public fdepoller
 
 	/// @brief Called if gpio irq occurs.
 	///        Default implementation calls #_irq if not null, otherwise returns 0.
+	/// @param value gpio value, 0 or 1 if reading of gpio value was successful, otherwise -1
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-	virtual int irq();
+	virtual int irq(int value);
 
 	/// @brief EPOLLPRI event handler.
 	///        This event means an interrupt on sysfs gpio.

@@ -87,14 +87,15 @@ bool gpioepoller::disable_irq()
 	return disable();
 }
 
-int gpioepoller::irq()
+int gpioepoller::irq(int value)
 {
-	return _irq ? _irq(this) : 0;
+	return _irq ? _irq(this, value) : 0;
 }
 
 int gpioepoller::epoll_pri()
 {
-	return irq();
+	int value;
+	return get(&value) ? irq(value) : irq(-1);
 }
 
 int gpioepoller::epoll_err()
