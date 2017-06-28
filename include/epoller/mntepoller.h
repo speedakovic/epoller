@@ -39,6 +39,9 @@ struct mntepoller : public fdepoller
 		tx_auto_disable = false;
 	}
 
+	/// @brief Default constructor.
+	mntepoller() : mntepoller(0) {}
+
 	/// @brief Destructor.
 	virtual ~mntepoller() {}
 

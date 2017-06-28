@@ -35,6 +35,9 @@ struct gpioepoller : public fdepoller
 	/// @param epoller parent epoller
 	gpioepoller(struct epoller *epoller) : fdepoller(epoller), _irq(0) {}
 
+	/// @brief Default constructor.
+	gpioepoller() : gpioepoller(0) {}
+
 	/// @brief Initializes the gpio epoller.
 	/// @param fd file descriptor of the gpio's value file
 	/// @return @c true if initialization was successful, otherwise @c false

@@ -25,6 +25,9 @@ struct evepoller : public epoller_event
 	/// @param epoller parent epoller
 	evepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), _recv_handler(0) {}
 
+	/// @brief Default constructor.
+	evepoller() : evepoller(0) {}
+
 	/// @brief Destructor.
 	virtual ~evepoller() {cleanup();}
 

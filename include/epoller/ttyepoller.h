@@ -15,6 +15,9 @@ struct ttyepoller : public fdepoller
 	/// @param epoller parent epoller
 	ttyepoller(struct epoller *epoller) : fdepoller(epoller) {}
 
+	/// @brief Default constructor.
+	ttyepoller() : ttyepoller(0) {}
+
 	/// @brief Initializes the tty epoller.
 	///
 	/// @param fd

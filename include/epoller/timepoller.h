@@ -25,6 +25,9 @@ struct timepoller : public epoller_event
 	/// @param epoller parent epoller
 	timepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), _timerhandler(0) {}
 
+	/// @brief Default constructor.
+	timepoller() : timepoller(0) {}
+
 	/// @brief Destructor.
 	virtual ~timepoller() {cleanup();}
 

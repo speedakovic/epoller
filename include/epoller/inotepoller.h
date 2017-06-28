@@ -26,6 +26,9 @@ struct inotepoller : public epoller_event
 	/// @param epoller parent epoller
 	inotepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), _inothandler(0) {}
 
+	/// @brief Default constructor.
+	inotepoller() : inotepoller(0) {}
+
 	/// @brief Destructor.
 	virtual ~inotepoller() {cleanup();}
 

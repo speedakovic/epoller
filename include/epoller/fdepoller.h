@@ -96,6 +96,9 @@ struct fdepoller : public epoller_event
 	    _exit           (0      )
 	{}
 
+	/// @brief Default constructor.
+	fdepoller() : fdepoller(0) {}
+
 	/// @brief Destructor.
 	virtual ~fdepoller() {cleanup();}
 

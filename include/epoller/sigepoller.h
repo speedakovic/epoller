@@ -24,6 +24,9 @@ struct sigepoller : public epoller_event
 	/// @param epoller parent epoller
 	sigepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), _sighandler(0) {}
 
+	/// @brief Default constructor.
+	sigepoller() : sigepoller(0) {}
+
 	/// @brief Destructor.
 	virtual ~sigepoller() {cleanup();}
 

@@ -21,6 +21,9 @@ struct sockepoller : public fdepoller
 	/// @param epoller parent epoller
 	sockepoller(struct epoller *epoller) : fdepoller(epoller), rx_flags(0), tx_flags(0) {}
 
+	/// @brief Default constructor.
+	sockepoller() : sockepoller(0) {}
+
 	/// @brief Initializes the socket epoller.
 	///
 	/// @param fd
