@@ -144,9 +144,8 @@ bool fdepoller::disable()
 	if (!enabled)
 		return true;
 
-	int ret = epoll_ctl(epoller->fd, EPOLL_CTL_DEL, fd, NULL);
-	if (ret == -1) {
-		perror(DBG_PREFIX"removing file descriptor from parent epoller failed");
+	if (epoller->fd != -1 && epoll_ctl(epoller->fd, EPOLL_CTL_DEL, fd, NULL) == -1) {
+		perror(DBG_PREFIX"removing file descriptor from epoller failed");
 		return false;
 	}
 

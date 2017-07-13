@@ -53,8 +53,7 @@ void timepoller::cleanup()
 	disarm();
 
 	// remove timer file descriptor from epoller
-	int ret = epoll_ctl(epoller->fd, EPOLL_CTL_DEL, fd, NULL);
-	if (ret == -1)
+	if (epoller->fd != -1 && epoll_ctl(epoller->fd, EPOLL_CTL_DEL, fd, NULL) == -1)
 		perror(DBG_PREFIX"removing file descriptor from epoller failed");
 
 	// close and invalidate timer file descriptor
