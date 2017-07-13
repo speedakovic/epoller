@@ -101,7 +101,7 @@ struct epoller
 	{}
 
 	/// @brief Destructor.
-	virtual ~epoller() {delete [] revents;}
+	virtual ~epoller() {cleanup(); delete [] revents;}
 
 	/// @brief Initializes the epoller.
 	///

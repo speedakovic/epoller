@@ -26,10 +26,8 @@ bool epoller::init()
 void epoller::cleanup()
 {
 	// check epoll file descriptor
-	if (fd == -1) {
-		std::cerr << DBG_PREFIX"not initialized yet" << std::endl;
-		return;
-	}
+	if (fd == -1)
+		return; // already cleaned-up
 
 	// close epoll file descriptor
 	close(fd);
