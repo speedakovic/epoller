@@ -14,13 +14,13 @@ set(SOURCES_EPOLLER
     src/epoller/evepoller.cpp
     src/epoller/fdepoller.cpp
     src/epoller/jsepoller.cpp
-    src/epoller/gpioepoller.cpp
-    src/epoller/inotepoller.cpp
     src/epoller/mntepoller.cpp
     src/epoller/sigepoller.cpp
-    src/epoller/sockepoller.cpp
     src/epoller/timepoller.cpp
-    src/epoller/ttyepoller.cpp)
+    src/epoller/ttyepoller.cpp
+    src/epoller/sockepoller.cpp
+    src/epoller/gpioepoller.cpp
+    src/epoller/inotepoller.cpp)
 
 set(SOURCES_LINBUFF
     src/linbuff/linbuff.c)
@@ -30,13 +30,13 @@ set(HEADERS_EPOLLER
     include/epoller/evepoller.h
     include/epoller/fdepoller.h
     include/epoller/jsepoller.h
-    include/epoller/gpioepoller.h
-    include/epoller/inotepoller.h
     include/epoller/mntepoller.h
     include/epoller/sigepoller.h
-    include/epoller/sockepoller.h
     include/epoller/timepoller.h
-    include/epoller/ttyepoller.h)
+    include/epoller/ttyepoller.h
+    include/epoller/sockepoller.h
+    include/epoller/gpioepoller.h
+    include/epoller/inotepoller.h)
 
 set(HEADERS_LINBUFF
     include/linbuff/linbuff.h)
