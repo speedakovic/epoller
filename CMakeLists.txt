@@ -13,6 +13,7 @@ set(SOURCES_EPOLLER
     src/epoller/epoller.cpp
     src/epoller/evepoller.cpp
     src/epoller/fdepoller.cpp
+    src/epoller/jsepoller.cpp
     src/epoller/gpioepoller.cpp
     src/epoller/inotepoller.cpp
     src/epoller/mntepoller.cpp
@@ -28,6 +29,7 @@ set(HEADERS_EPOLLER
     include/epoller/epoller.h
     include/epoller/evepoller.h
     include/epoller/fdepoller.h
+    include/epoller/jsepoller.h
     include/epoller/gpioepoller.h
     include/epoller/inotepoller.h
     include/epoller/mntepoller.h
