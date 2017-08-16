@@ -470,14 +470,14 @@ int fdepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 	struct epoller_event **pthis = epoller_event::pthis;
 
 	ret = enter(revent);
-	if (ret || !*pthis)
+	if (ret || !*pthis || fd == -1)
 		return ret;
 
 	if (revent->events & EPOLLIN) {
 		revent->events &= ~EPOLLIN;
 		epoll_in_cnt++;
 		ret = epoll_in();
-		if (ret || !*pthis)
+		if (ret || !*pthis || fd == -1)
 			return ret;
 	}
 
@@ -485,7 +485,7 @@ int fdepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 		revent->events &= ~EPOLLOUT;
 		epoll_out_cnt++;
 		ret = epoll_out();
-		if (ret || !*pthis)
+		if (ret || !*pthis || fd == -1)
 			return ret;
 	}
 
@@ -493,7 +493,7 @@ int fdepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 		revent->events &= ~EPOLLPRI;
 		epoll_pri_cnt++;
 		ret = epoll_pri();
-		if (ret || !*pthis)
+		if (ret || !*pthis || fd == -1)
 			return ret;
 	}
 
@@ -501,7 +501,7 @@ int fdepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 		revent->events &= ~EPOLLHUP;
 		epoll_hup_cnt++;
 		ret = epoll_hup();
-		if (ret || !*pthis)
+		if (ret || !*pthis || fd == -1)
 			return ret;
 	}
 
@@ -509,13 +509,13 @@ int fdepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 		revent->events &= ~EPOLLERR;
 		epoll_err_cnt++;
 		ret = epoll_err();
-		if (ret || !*pthis)
+		if (ret || !*pthis || fd == -1)
 			return ret;
 	}
 
 	if (revent->events) {
 		ret = epoll_unknown(revent->events);
-		if (ret || !*pthis)
+		if (ret || !*pthis || fd == -1)
 			return ret;
 	}
 
@@ -536,7 +536,7 @@ int fdepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 	}
 
 	ret = exit(revent);
-	if (ret || !*pthis)
+	if (ret || !*pthis || fd == -1)
 		return ret;
 
 	return 0;
