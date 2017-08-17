@@ -871,6 +871,18 @@ bool sockepoller::fill_addr_inet6(const std::string &ip, unsigned short port, st
 	return true;
 }
 
+bool sockepoller::parse_addr_inet4(std::string &ip, unsigned short &port, const struct sockaddr_in *addr)
+{
+	port = ntohs(addr->sin_port);
+	return ip2str_inet4(&addr->sin_addr, ip);
+}
+
+bool sockepoller::parse_addr_inet6(std::string &ip, unsigned short &port, const struct sockaddr_in6 *addr)
+{
+	port = ntohs(addr->sin6_port);
+	return ip2str_inet6(&addr->sin6_addr, ip);
+}
+
 bool sockepoller::ip2str_inet4(const struct in_addr *addr, std::string &str)
 {
 	char ip[INET_ADDRSTRLEN];

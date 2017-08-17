@@ -334,6 +334,20 @@ struct sockepoller : public fdepoller
 	/// @return @c true if filling was successful, otherwise @c false
 	static bool fill_addr_inet6(const std::string &ip, unsigned short port, struct sockaddr_in6 *addr);
 
+	/// @brief Parses sockaddr_in struct for ip address and port.
+	/// @param ip returned IPv4 address
+	/// @param port returned port
+	/// @param addr address struct to be parsed
+	/// @return @c true if parsing was successful, otherwise @c false
+	static bool parse_addr_inet4(std::string &ip, unsigned short &port, const struct sockaddr_in *addr);
+
+	/// @brief Parses sockaddr_in6 struct for ip address and port.
+	/// @param ip returned IPv6 address
+	/// @param port returned port
+	/// @param addr address struct to be parsed
+	/// @return @c true if parsing was successful, otherwise @c false
+	static bool parse_addr_inet6(std::string &ip, unsigned short &port, const struct sockaddr_in6 *addr);
+
 	/// @brief Converts IPv4 address into string.
 	/// @return @c true if conversion was successful, otherwise @c false
 	static bool ip2str_inet4(const struct in_addr *addr, std::string &str);
