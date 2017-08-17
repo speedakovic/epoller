@@ -13,13 +13,13 @@ struct tcpcepoller : public sockepoller
 	bool connecting; ///< connecting state flag
 
 	/// @brief Connecting result handler.
-	/// @see #cdone
+	/// @see #con
 	/// @param tcpcepoller TCP client epoller within that the event occured
-	int (*_cdone) (struct tcpcepoller *tcpcepoller, bool connected);
+	int (*_con) (struct tcpcepoller *tcpcepoller, bool connected);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller
-	tcpcepoller(struct epoller *epoller) : sockepoller(epoller), connecting(false), _cdone(0) {}
+	tcpcepoller(struct epoller *epoller) : sockepoller(epoller), connecting(false), _con(0) {}
 
 	/// @brief Default constructor.
 	tcpcepoller() : tcpcepoller(0) {}
@@ -39,7 +39,7 @@ struct tcpcepoller : public sockepoller
 
 	/// @brief Starts connecting.
 	///        Socket in connecting state has enabled only EPOLLOUT events.
-	///        Connecting result will be announced through #cdone method.
+	///        Connecting result will be announced through #con method.
 	///        In case of any serious error any of #hup, #err or even #un methods may be called.
 	///        No #tx method will be called in connecting state as EPOLLOUT event is fully consumed by #epoll_out handler.
 	///        Neither #rx nor #pri methods will be called as these events are not enabled.
@@ -55,9 +55,9 @@ struct tcpcepoller : public sockepoller
 	///        No #tx method will be called as the very first EPOLLOUT event was fully consumed by #epoll_out handler.
 	///        Neither #rx nor #pri methods will be called as these events are not enabled.
 	///
-	/// @param connected @c true if socket is connected, otherwise @c false
+	/// @param connected @c true if socket is connected, otherwise @c false and errno is set appropriately
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-	virtual int cdone(bool connected);
+	virtual int con(bool connected);
 
 	/// @see sockepoller::epoll_out
 	virtual int epoll_out();

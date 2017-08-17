@@ -33,26 +33,16 @@ bool tcpcepoller::connect(const std::string &ip, unsigned short port)
 	return true;
 }
 
-int tcpcepoller::cdone(bool connected)
+int tcpcepoller::con(bool connected)
 {
-	return _cdone ? _cdone(this, connected) : 0;
+	return _con ? _con(this, connected) : 0;
 }
 
 int tcpcepoller::epoll_out()
 {
 	if (connecting) {
-
 		connecting = false;
-
-		int ret = send(fd, 0, 0, 0);
-
-		if (ret == 0) {
-			return cdone(true);
-
-		} else {
-			perror(DBG_PREFIX"connecting failed");
-			return cdone(false);
-		}
+		return con(send(fd, 0, 0, 0) ? false : true);
 
 	} else
 		return sockepoller::epoll_out();
