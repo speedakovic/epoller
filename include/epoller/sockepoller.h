@@ -314,6 +314,12 @@ struct sockepoller : public fdepoller
 	/// @brief Converts socket type to string.
 	static std::string so_type_2_str(int type);
 
+	/// @brief Gets family of given IP address.
+	/// @param ip ip address
+	/// @param ai_family address family (AF_INET, AF_INET6, ...)
+	/// @return @c true if success, otherwise @c false
+	static bool ip2family(const std::string &ip, int *ai_family);
+
 	/// @brief Fills sockaddr_in struct.
 	/// @param ip IPv4 address, when empty @c INADDR_ANY will be used
 	/// @param port port
@@ -328,6 +334,21 @@ struct sockepoller : public fdepoller
 	/// @return @c true if filling was successful, otherwise @c false
 	static bool fill_addr_inet6(const std::string &ip, unsigned short port, struct sockaddr_in6 *addr);
 
+	/// @brief Converts IPv4 address into string.
+	/// @return @c true if conversion was successful, otherwise @c false
+	static bool ip2str_inet4(const struct in_addr *addr, std::string &str);
+
+	/// @brief Converts IPv6 address into string.
+	/// @return @c true if conversion was successful, otherwise @c false
+	static bool ip2str_inet6(const struct in6_addr *addr, std::string &str);
+
+	/// @brief Converts string into IPv4 address.
+	/// @return @c true if conversion was successful, otherwise @c false
+	static bool str2ip_inet4(struct in_addr *addr, const std::string &str);
+
+	/// @brief Converts string into IPv6 address.
+	/// @return @c true if conversion was successful, otherwise @c false
+	static bool str2ip_inet6(struct in6_addr *addr, const std::string &str);
 };
 
 #endif // SOCKEPOLLER_H

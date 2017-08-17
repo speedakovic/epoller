@@ -2,6 +2,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <net/if.h>
+#include <netdb.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <cstdio>
@@ -815,6 +816,21 @@ std::string sockepoller::so_type_2_str(int type)
 	}
 }
 
+bool sockepoller::ip2family(const std::string &ip, int *ai_family)
+{
+	struct addrinfo hint = {};
+	struct addrinfo *res = NULL;
+
+	hint.ai_family = PF_UNSPEC;
+	hint.ai_flags = AI_NUMERICHOST;
+
+	if (!getaddrinfo(ip.c_str(), NULL, &hint, &res)) {
+		*ai_family = res->ai_family;
+		return true;
+	} else
+		return false;
+}
+
 bool sockepoller::fill_addr_inet4(const std::string &ip, unsigned short port, struct sockaddr_in *addr)
 {
 	addr->sin_family = AF_INET;
@@ -822,13 +838,13 @@ bool sockepoller::fill_addr_inet4(const std::string &ip, unsigned short port, st
 	if (ip.empty())
 		addr->sin_addr.s_addr = htonl(INADDR_ANY);
 	else {
-		 int ret = inet_pton(AF_INET, ip.c_str(), &(addr->sin_addr));
-		 if (ret == 0) {
-			 std::cerr << DBG_PREFIX"converting IPv4 address failed, invalid network address" << std::endl;
-			 return false;
+		int ret = inet_pton(AF_INET, ip.c_str(), &(addr->sin_addr));
+		if (ret == 0) {
+			std::cerr << DBG_PREFIX"converting IPv4 address failed, invalid network address" << std::endl;
+			return false;
 		 } else if (ret == -1) {
-			 perror(DBG_PREFIX"converting IPv4 address failed");
-			 return false;
+			perror(DBG_PREFIX"converting IPv4 address failed");
+			return false;
 		 }
 	}
 
@@ -842,16 +858,44 @@ bool sockepoller::fill_addr_inet6(const std::string &ip, unsigned short port, st
 	if (ip.empty())
 		addr->sin6_addr = in6addr_any;
 	else {
-		 int ret = inet_pton(AF_INET6, ip.c_str(), &(addr->sin6_addr));
-		 if (ret == 0) {
-			 std::cerr << DBG_PREFIX"converting IPv6 address failed, invalid network address" << std::endl;
-			 return false;
+		int ret = inet_pton(AF_INET6, ip.c_str(), &(addr->sin6_addr));
+		if (ret == 0) {
+			std::cerr << DBG_PREFIX"converting IPv6 address failed, invalid network address" << std::endl;
+			return false;
 		 } else if (ret == -1) {
-			 perror(DBG_PREFIX"converting IPv6 address failed");
-			 return false;
+			perror(DBG_PREFIX"converting IPv6 address failed");
+			return false;
 		 }
 	}
 
 	return true;
+}
+
+bool sockepoller::ip2str_inet4(const struct in_addr *addr, std::string &str)
+{
+	char ip[INET_ADDRSTRLEN];
+	if(!inet_ntop(AF_INET, addr, ip, INET_ADDRSTRLEN))
+		return false;
+	str = ip;
+	return true;
+}
+
+bool sockepoller::ip2str_inet6(const struct in6_addr *addr, std::string &str)
+{
+	char ip6[INET6_ADDRSTRLEN];
+	if(!inet_ntop(AF_INET6, addr, ip6, INET6_ADDRSTRLEN))
+		return false;
+	str = ip6;
+	return true;
+}
+
+bool sockepoller::str2ip_inet4(struct in_addr *addr, const std::string &str)
+{
+	return inet_pton(AF_INET, str.c_str(), addr) == 1 ? true : false;
+}
+
+bool sockepoller::str2ip_inet6(struct in6_addr *addr, const std::string &str)
+{
+	return inet_pton(AF_INET6, str.c_str(), addr) == 1 ? true : false;
 }
 
