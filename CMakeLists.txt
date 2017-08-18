@@ -20,6 +20,7 @@ set(SOURCES_EPOLLER
     src/epoller/ttyepoller.cpp
     src/epoller/sockepoller.cpp
     src/epoller/tcpcepoller.cpp
+    src/epoller/tcpsepoller.cpp
     src/epoller/gpioepoller.cpp
     src/epoller/inotepoller.cpp)
 
@@ -37,6 +38,7 @@ set(HEADERS_EPOLLER
     include/epoller/ttyepoller.h
     include/epoller/sockepoller.h
     include/epoller/tcpcepoller.h
+    include/epoller/tcpsepoller.h
     include/epoller/gpioepoller.h
     include/epoller/inotepoller.h)
 
