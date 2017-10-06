@@ -73,7 +73,7 @@ int jsepoller::rx(int len)
 
 			struct js_event *event = (struct js_event*)LINBUFF_RD_PTR(&rxbuff);
 
-			if (ret = jshandler(event))
+			if ((ret = jshandler(event)))
 				return ret;
 
 			linbuff_skip(&rxbuff, sizeof(struct js_event));
