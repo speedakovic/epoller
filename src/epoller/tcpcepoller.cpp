@@ -51,18 +51,18 @@ int tcpcepoller::epoll_out()
 int tcpcepoller::epoll_hup()
 {
 	connecting = false;
-	sockepoller::epoll_hup();
+	return sockepoller::epoll_hup();
 }
 
 int tcpcepoller::epoll_err()
 {
 	connecting = false;
-	sockepoller::epoll_err();
+	return sockepoller::epoll_err();
 }
 
 int tcpcepoller::epoll_unknown(int events)
 {
 	connecting = false;
-	sockepoller::epoll_unknown(events);
+	return sockepoller::epoll_unknown(events);
 }
 
