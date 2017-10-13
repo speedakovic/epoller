@@ -12,9 +12,24 @@
 /// @brief Timer epoller.
 struct timepoller : public epoller_event
 {
+	/// @brief Event receiver interface.
+	class receiver
+	{
+	public:
+		/// @brief Destructor.
+		virtual ~receiver() {}
+
+		/// @brief Called when timer event occurs.
+		/// @param sender event sender
+		/// @param exp number of expirations since last handler call
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int timepoller_timerhandler(timepoller &sender, uint64_t exp) = 0;
+	};
+
 	int                fd;      ///< timer file descriptor
 	struct epoller    *epoller; ///< parent epoller
 	struct epoll_event event;   ///< epoll event
+	struct receiver   *rcvr;    ///< event receiver
 
 	/// @brief Handler for timer events.
 	/// @see #timerhandler
@@ -23,7 +38,7 @@ struct timepoller : public epoller_event
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller
-	timepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), _timerhandler(0) {}
+	timepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), rcvr(0), _timerhandler(0) {}
 
 	/// @brief Default constructor.
 	timepoller() : timepoller(0) {}
@@ -73,7 +88,9 @@ struct timepoller : public epoller_event
 
 	/// @brief Called when timer event occurs.
 	///
-	/// Default implementation calls #_timerhandler if not null, otherwise returns 0.
+	/// Default implementation calls receiver::timepoller_timerhandler method of #rcvr if not null,
+	/// otherwise calls #_timerhandler if not null,
+	/// otherwise returns 0.
 	///
 	/// @param exp number of expirations since last handler call
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
