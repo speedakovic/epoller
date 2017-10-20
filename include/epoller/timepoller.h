@@ -69,10 +69,40 @@ struct timepoller : public epoller_event
 	/// @return @c true if timer was armed successfully, otherwise @c false
 	bool arm_oneshot(const struct timespec *val, int flags = 0);
 
+	/// @brief Arms the oneshot timer.
+	/// @see timerfd_settime syscall documentation
+	/// @param msec period in milliseconds
+	/// @param flags see timerfd_settime syscall documentation
+	/// @return @c true if timer was armed successfully, otherwise @c false
+	bool arm_oneshot_msec(uint64_t msec, int flags = 0);
+
+	/// @brief Arms the oneshot timer.
+	/// @see timerfd_settime syscall documentation
+	/// @param usec period in microseconds
+	/// @param flags see timerfd_settime syscall documentation
+	/// @return @c true if timer was armed successfully, otherwise @c false
+	bool arm_oneshot_usec(uint64_t usec, int flags = 0);
+
 	/// @brief Arms the periodic timer.
 	/// @see timerfd_settime syscall documentation
 	/// @return @c true if timer was armed successfully, otherwise @c false
 	bool arm_periodic(const struct timespec *val, const struct timespec *init_val = 0, int flags = 0);
+
+	/// @brief Arms the periodic timer.
+	/// @see timerfd_settime syscall documentation
+	/// @param msec period in milliseconds
+	/// @param init_msec initial period in milliseconds
+	/// @param flags see timerfd_settime syscall documentation
+	/// @return @c true if timer was armed successfully, otherwise @c false
+	bool arm_periodic_msec(uint64_t msec, uint64_t init_msec = 0, int flags = 0);
+
+	/// @brief Arms the periodic timer.
+	/// @see timerfd_settime syscall documentation
+	/// @param usec period in microseconds
+	/// @param init_usec initial period in microseconds
+	/// @param flags see timerfd_settime syscall documentation
+	/// @return @c true if timer was armed successfully, otherwise @c false
+	bool arm_periodic_usec(uint64_t usec, uint64_t init_usec = 0, int flags = 0);
 
 	/// @brief Arms the timer.
 	/// @see timerfd_settime syscall documentation
