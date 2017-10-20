@@ -11,9 +11,24 @@
 /// @brief Signal epoller.
 struct sigepoller : public epoller_event
 {
+	/// @brief Event receiver interface.
+	class receiver
+	{
+	public:
+		/// @brief Destructor.
+		virtual ~receiver() {}
+
+		/// @brief Called when signal is received.
+		/// @param sender event sender
+		/// @param siginfo structure with information about the received signal
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int sighandler(sigepoller &sender, struct signalfd_siginfo *siginfo) = 0;
+	};
+
 	int                fd;      ///< signal file descriptor
 	struct epoller    *epoller; ///< parent epoller
 	struct epoll_event event;   ///< epoll event
+	struct receiver   *rcvr;    ///< event receiver
 
 	/// @brief Handler for signal event.
 	/// @see #sighandler
@@ -22,7 +37,7 @@ struct sigepoller : public epoller_event
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller
-	sigepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), _sighandler(0) {}
+	sigepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), rcvr(0), _sighandler(0) {}
 
 	/// @brief Default constructor.
 	sigepoller() : sigepoller(0) {}
