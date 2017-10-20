@@ -223,6 +223,6 @@ int timepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 
 int timepoller::timerhandler(uint64_t exp)
 {
-	return rcvr ? rcvr->timepoller_timerhandler(*this, exp) : (_timerhandler ? _timerhandler(this, exp) : 0);
+	return rcvr ? rcvr->timerhandler(*this, exp) : (_timerhandler ? _timerhandler(this, exp) : 0);
 }
 

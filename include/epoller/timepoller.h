@@ -23,7 +23,7 @@ struct timepoller : public epoller_event
 		/// @param sender event sender
 		/// @param exp number of expirations since last handler call
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int timepoller_timerhandler(timepoller &sender, uint64_t exp) = 0;
+		virtual int timerhandler(timepoller &sender, uint64_t exp) = 0;
 	};
 
 	int                fd;      ///< timer file descriptor
