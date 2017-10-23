@@ -58,7 +58,9 @@ struct sigepoller : public epoller_event
 
 	/// @brief Called when signal is received.
 	///
-	/// Default implementation calls #_sighandler if not null, otherwise returns 0.
+	/// Default implementation calls receiver::sighandler method of #rcvr if not null,
+	/// otherwise calls #_sighandler if not null,
+	/// otherwise returns 0.
 	///
 	/// @param siginfo structure with information about the received signal
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error

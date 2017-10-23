@@ -118,7 +118,7 @@ struct timepoller : public epoller_event
 
 	/// @brief Called when timer event occurs.
 	///
-	/// Default implementation calls receiver::timepoller_timerhandler method of #rcvr if not null,
+	/// Default implementation calls receiver::timerhandler method of #rcvr if not null,
 	/// otherwise calls #_timerhandler if not null,
 	/// otherwise returns 0.
 	///
