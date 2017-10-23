@@ -78,10 +78,7 @@ int mntepoller::done()
 
 int mntepoller::change(const std::list<mntentry> &entries)
 {
-	if (_change)
-		return _change(this, entries);
-	else
-		return 0;
+	return rcvr ? rcvr->change(*this, entries) : (_change ? _change(this, entries) : 0);
 }
 
 bool mntepoller::read(std::list<mntentry> &entries, const std::string &pathname)

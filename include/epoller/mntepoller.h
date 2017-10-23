@@ -26,13 +26,29 @@ struct mntentry
 ///        and when the change occurs appropriate callback is called.
 struct mntepoller : public fdepoller
 {
+	/// @brief Event receiver interface.
+	class receiver
+	{
+	public:
+		/// @brief Destructor.
+		virtual ~receiver() {}
+
+		/// @brief Called whenever mount entries have changed.
+		/// @param sender event sender
+		/// @param entries mount entries
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int change(mntepoller &sender, const std::list<mntentry> &entries) = 0;
+	};
+
+	struct receiver *rcvr; ///< event receiver
+
 	/// @see change
 	/// @param mntepoller mount epoller within that the event occured
 	int (*_change) (struct mntepoller *mntepoller, const std::list<mntentry> &entries);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller
-	mntepoller(struct epoller *epoller) : fdepoller(epoller), _change(0) {
+	mntepoller(struct epoller *epoller) : fdepoller(epoller), rcvr(0), _change(0) {
 		rx_auto_enable  = false;
 		rx_auto_disable = false;
 		tx_auto_enable  = false;
@@ -66,7 +82,11 @@ struct mntepoller : public fdepoller
 	virtual int done();
 
 	/// @brief This handler is called whenever mount entries have changed.
-	///        Default implementation calls #_change if not null, otherwise returns 0.
+	///
+	/// Default implementation calls receiver::change method of #rcvr if not null,
+	/// otherwise calls #_change if not null,
+	/// otherwise returns 0.
+	///
 	/// @param entries mount entries
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int change(const std::list<mntentry> &entries);
