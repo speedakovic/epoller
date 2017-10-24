@@ -13,9 +13,24 @@
 /// @brief Inotify epoller.
 struct inotepoller : public epoller_event
 {
+	/// @brief Event receiver interface.
+	class receiver
+	{
+	public:
+		/// @brief Destructor.
+		virtual ~receiver() {}
+
+		/// @brief Called when event occurs.
+		/// @param sender event sender
+		/// @param event structure with information about the occurred event
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int inothandler(inotepoller &sender, struct inotify_event *event) = 0;
+	};
+
 	int                fd;      ///< inotify file descriptor
 	struct epoller    *epoller; ///< parent epoller
 	struct epoll_event event;   ///< epoll event
+	struct receiver   *rcvr;    ///< event receiver
 
 	/// @brief Handler for inotify event.
 	/// @see #inothandler
@@ -24,7 +39,7 @@ struct inotepoller : public epoller_event
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller
-	inotepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), _inothandler(0) {}
+	inotepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), rcvr(0), _inothandler(0) {}
 
 	/// @brief Default constructor.
 	inotepoller() : inotepoller(0) {}
@@ -55,7 +70,9 @@ struct inotepoller : public epoller_event
 
 	/// @brief Called when event occurs.
 	///
-	/// Default implementation calls #_inothandler if not null, otherwise returns 0.
+	/// Default implementation calls receiver::inothandler method of #rcvr if not null,
+	/// otherwise calls #_inothandler if not null,
+	/// otherwise returns 0.
 	///
 	/// @param event structure with information about the occurred event
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
