@@ -12,9 +12,24 @@
 /// @brief Event epoller.
 struct evepoller : public epoller_event
 {
+	/// @brief Event receiver interface.
+	class receiver
+	{
+	public:
+		/// @brief Destructor.
+		virtual ~receiver() {}
+
+		/// @brief Called when event is received.
+		/// @param sender event sender
+		/// @param cnt counter
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int recv_handler(evepoller &sender, uint64_t cnt) = 0;
+	};
+
 	int                fd;      ///< event file descriptor
 	struct epoller    *epoller; ///< parent epoller
 	struct epoll_event event;   ///< epoll event
+	struct receiver   *rcvr;    ///< event receiver
 
 	/// @brief Handler for received event.
 	/// @see #recv_handler
@@ -23,7 +38,7 @@ struct evepoller : public epoller_event
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller
-	evepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), _recv_handler(0) {}
+	evepoller(struct epoller *epoller) : fd(-1), epoller(epoller), event(), rcvr(0), _recv_handler(0) {}
 
 	/// @brief Default constructor.
 	evepoller() : evepoller(0) {}
@@ -50,7 +65,9 @@ struct evepoller : public epoller_event
 
 	/// @brief Called when event is received.
 	///
-	/// Default implementation calls #_recv_handler if not null, otherwise returns 0.
+	/// Default implementation calls receiver::recv_handler method of #rcvr if not null,
+	/// otherwise calls #_recv_handler if not null,
+	/// otherwise returns 0.
 	///
 	/// @param cnt counter
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error

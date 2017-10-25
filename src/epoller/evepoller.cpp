@@ -117,6 +117,6 @@ int evepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 
 int evepoller::recv_handler(uint64_t cnt)
 {
-	return _recv_handler ? _recv_handler(this, cnt) : 0;
+	return rcvr ? rcvr->recv_handler(*this, cnt) : (_recv_handler ? _recv_handler(this, cnt) : 0);
 }
 
