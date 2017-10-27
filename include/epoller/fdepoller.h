@@ -12,6 +12,61 @@
 /// @brief Generic file desciptor epoller.
 struct fdepoller : public epoller_event
 {
+	/// @brief Event receiver interface.
+	class receiver
+	{
+	public:
+		/// @brief Destructor.
+		virtual ~receiver() {}
+
+		/// @brief Called if new data have just been received (to #rxbuff)
+		///        or some error occurred during reception.
+		/// @param sender event sender
+		/// @param len length of just received data if zero or positive, error state if negative
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int rx(fdepoller &sender, int len) = 0;
+
+		/// @brief Called if some data have just been transmitted (from #txbuff)
+		///        or some error occurred during transmission.
+		/// @param sender event sender
+		/// @param len length of just transmitted data if zero or positive, error state if negative
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int tx(fdepoller &sender, int len) = 0;
+
+		/// @brief Called if ugent-data event occurred.
+		/// @param sender event sender
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int pri(fdepoller &sender) = 0;
+
+		/// @brief Called if hang-out event occurred.
+		/// @param sender event sender
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int hup(fdepoller &sender) = 0;
+
+		/// @brief Called if error event occurred.
+		/// @param sender event sender
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int err(fdepoller &sender) = 0;
+
+		/// @brief Called if unknown event occurred.
+		/// @param sender event sender
+		/// @param events unknown event flags
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int un(fdepoller &sender, int events) = 0;
+
+		/// @brief Called when entering into epoller handler.
+		/// @param sender event sender
+		/// @param revent event (as is returned from epoll_wait)
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int enter(fdepoller &sender, struct epoll_event *revent) = 0;
+
+		/// @brief Called when exiting (with zero) from epoller handler.
+		/// @param sender event sender
+		/// @param revent event (as is returned from epoll_wait)
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int exit(fdepoller &sender, struct epoll_event *revent) = 0;
+	};
+
 	int                fd;              ///< file descriptor
 	struct epoller    *epoller;         ///< parent epoller
 	struct epoll_event event;           ///< epoll event
@@ -27,6 +82,7 @@ struct fdepoller : public epoller_event
 	unsigned long      epoll_pri_cnt;   ///< EPOLLPRI counter
 	unsigned long      epoll_hup_cnt;   ///< EPOLLHUP counter
 	unsigned long      epoll_err_cnt;   ///< EPOLLERR counter
+	struct receiver   *rcvr;            ///< event receiver
 
 	/// @brief Handler for rx events.
 	/// @see #rx
@@ -86,6 +142,7 @@ struct fdepoller : public epoller_event
 	    epoll_pri_cnt   (0      ),
 	    epoll_hup_cnt   (0      ),
 	    epoll_err_cnt   (0      ),
+	    rcvr            (0      ),
 	    _rx             (0      ),
 	    _tx             (0      ),
 	    _pri            (0      ),
@@ -200,7 +257,8 @@ struct fdepoller : public epoller_event
 	/// @brief Called if new data have just been received (to #rxbuff)
 	/// or some error occurred during reception.
 	///
-	/// Default implementation calls #_rx if not null,
+	/// Default implementation calls receiver::rx method of #rcvr if not null,
+	/// otherwise calls #_rx if not null,
 	/// otherwise returns 0 if len is positive, 1 if len is zero or -1 if len is negative.
 	///
 	/// @param len length of just received data if zero or positive, error state if negative
@@ -210,7 +268,8 @@ struct fdepoller : public epoller_event
 	/// @brief Called if some data have just been transmitted (from #txbuff)
 	/// or some error occurred during transmission.
 	///
-	/// Default implementation calls #_tx if not null,
+	/// Default implementation calls receiver::tx method of #rcvr if not null,
+	/// otherwise calls #_tx if not null,
 	/// otherwise returns 0 if len is positive, 1 if len is zero or -1 if len is negative.
 	///
 	/// @param len length of just transmitted data if zero or positive, error state if negative
@@ -219,28 +278,36 @@ struct fdepoller : public epoller_event
 
 	/// @brief Called if ugent-data event occurred.
 	///
-	/// Default implementation calls #_pri if not null, otherwise returns -1.
+	/// Default implementation calls receiver::pri method of #rcvr if not null,
+	/// otherwise calls #_pri if not null,
+	/// otherwise returns -1.
 	///
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int pri();
 
 	/// @brief Called if hang-out event occurred.
 	///
-	/// Default implementation calls #_hup if not null, otherwise returns -1.
+	/// Default implementation calls receiver::hup method of #rcvr if not null,
+	/// otherwise calls #_hup if not null,
+	/// otherwise returns -1.
 	///
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int hup();
 
 	/// @brief Called if error event occurred.
 	///
-	/// Default implementation calls #_err if not null, otherwise returns -1.
+	/// Default implementation calls receiver::err method of #rcvr if not null,
+	/// otherwise calls #_err if not null,
+	/// otherwise returns -1.
 	///
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int err();
 
 	/// @brief Called if unknown event occurred.
 	///
-	/// Default implementation calls #_un if not null, otherwise returns -1.
+	/// Default implementation calls receiver::un method of #rcvr if not null,
+	/// otherwise calls #_un if not null,
+	/// otherwise returns -1.
 	///
 	/// @param events unknown event flags
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
@@ -248,7 +315,9 @@ struct fdepoller : public epoller_event
 
 	/// @brief Called when entering into epoller handler.
 	///
-	/// Default implementation calls #_enter if not null, otherwise returns 0.
+	/// Default implementation calls receiver::enter method of #rcvr if not null,
+	/// otherwise calls #_enter if not null,
+	/// otherwise returns 0.
 	///
 	/// @param revent event (as is returned from epoll_wait)
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
@@ -256,7 +325,9 @@ struct fdepoller : public epoller_event
 
 	/// @brief Called when exiting (with zero) from epoller handler.
 	///
-	/// Default implementation calls #_exit if not null, otherwise returns 0.
+	/// Default implementation calls receiver::exit method of #rcvr if not null,
+	/// otherwise calls #_exit if not null,
+	/// otherwise returns 0.
 	///
 	/// @param revent event (as is returned from epoll_wait)
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error

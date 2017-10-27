@@ -279,7 +279,9 @@ bool fdepoller::get_flags(int *flags)
 
 int fdepoller::rx(int len)
 {
-	if (_rx)
+	if (rcvr)
+		return rcvr->rx(*this, len);
+	else if (_rx)
 		return _rx(this, len);
 	else {
 		std::cerr << DBG_PREFIX"rx event, len = " << len << std::endl;
@@ -296,7 +298,9 @@ int fdepoller::rx(int len)
 
 int fdepoller::tx(int len)
 {
-	if (_tx)
+	if (rcvr)
+		return rcvr->tx(*this, len);
+	else if (_tx)
 		return _tx(this, len);
 	else {
 		std::cerr << DBG_PREFIX"tx event, len = " << len << std::endl;
@@ -313,7 +317,9 @@ int fdepoller::tx(int len)
 
 int fdepoller::pri()
 {
-	if (_pri)
+	if (rcvr)
+		return rcvr->pri(*this);
+	else if (_pri)
 		return _pri(this);
 	else {
 		std::cerr << DBG_PREFIX"urgent-data event" << std::endl;
@@ -323,7 +329,9 @@ int fdepoller::pri()
 
 int fdepoller::hup()
 {
-	if (_hup)
+	if (rcvr)
+		return rcvr->hup(*this);
+	else if (_hup)
 		return _hup(this);
 	else {
 		std::cerr << DBG_PREFIX"hang-out event" << std::endl;
@@ -333,7 +341,9 @@ int fdepoller::hup()
 
 int fdepoller::err()
 {
-	if (_err)
+	if (rcvr)
+		return rcvr->err(*this);
+	else if (_err)
 		return _err(this);
 	else {
 		std::cerr << DBG_PREFIX"error event" << std::endl;
@@ -343,7 +353,9 @@ int fdepoller::err()
 
 int fdepoller::un(int events)
 {
-	if (_un)
+	if (rcvr)
+		return rcvr->un(*this, events);
+	else if (_un)
 		return _un(this, events);
 	else {
 		std::cerr << DBG_PREFIX"unknown event" << std::endl;
@@ -353,12 +365,12 @@ int fdepoller::un(int events)
 
 int fdepoller::enter(struct epoll_event *revent)
 {
-	return _enter ? _enter(this, revent) : 0;
+	return rcvr ? rcvr->enter(*this, revent) : (_enter ? _enter(this, revent) : 0);
 }
 
 int fdepoller::exit(struct epoll_event *revent)
 {
-	return _exit ? _exit(this, revent) : 0;
+	return rcvr ? rcvr->exit(*this, revent) : (_exit ? _exit(this, revent) : 0);
 }
 
 int fdepoller::epoll_in()

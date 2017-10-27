@@ -27,7 +27,7 @@ struct mntentry
 struct mntepoller : public fdepoller
 {
 	/// @brief Event receiver interface.
-	class receiver
+	class receiver : public fdepoller::receiver
 	{
 	public:
 		/// @brief Destructor.
@@ -40,15 +40,13 @@ struct mntepoller : public fdepoller
 		virtual int change(mntepoller &sender, const std::list<mntentry> &entries) = 0;
 	};
 
-	struct receiver *rcvr; ///< event receiver
-
 	/// @see change
 	/// @param mntepoller mount epoller within that the event occured
 	int (*_change) (struct mntepoller *mntepoller, const std::list<mntentry> &entries);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller
-	mntepoller(struct epoller *epoller) : fdepoller(epoller), rcvr(0), _change(0) {
+	mntepoller(struct epoller *epoller) : fdepoller(epoller), _change(0) {
 		rx_auto_enable  = false;
 		rx_auto_disable = false;
 		tx_auto_enable  = false;
