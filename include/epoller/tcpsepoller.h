@@ -10,6 +10,21 @@
 /// @brief TCP server based on socket epoller.
 struct tcpsepoller : public sockepoller
 {
+	/// @brief Event receiver interface.
+	struct receiver : public fdepoller::receiver
+	{
+		/// @brief Destructor.
+		virtual ~receiver() {}
+
+		/// @brief Called if accepting is done.
+		/// @param sender event sender
+		/// @param fd non-negative file descriptor of accepted socket or -1 indicating error with errno set appropriately
+		/// @param addr peer socket address
+		/// @param addrlen size of peer socket address
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int acc(tcpsepoller &sender, int fd, const struct sockaddr *addr, const socklen_t *addrlen) = 0;
+	};
+
 	/// @brief Connecting result handler.
 	/// @see #acc
 	/// @param tcpsepoller TCP server epoller within that the event occured
@@ -32,6 +47,11 @@ struct tcpsepoller : public sockepoller
 	virtual bool socket(int domain, const std::string &ip, unsigned short port, int backlog = 1, bool reuseaddr = true);
 
 	/// @brief Called if accepting is done.
+	///
+	/// Default implementation calls receiver::acc method of #rcvr if not null,
+	/// otherwise calls #_acc if not null,
+	/// otherwise returns 0.
+	///
 	/// @param fd non-negative file descriptor of accepted socket or -1 indicating error with errno set appropriately
 	/// @param addr peer socket address
 	/// @param addrlen size of peer socket address

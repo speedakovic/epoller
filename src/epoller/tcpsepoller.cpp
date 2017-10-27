@@ -31,7 +31,7 @@ bool tcpsepoller::socket(int domain, const std::string &ip, unsigned short port,
 
 int tcpsepoller::acc(int fd, const struct sockaddr *addr, const socklen_t *addrlen)
 {
-	return _acc ? _acc(this, fd, addr, addrlen) : 0;
+	return rcvr ? static_cast<receiver *>(rcvr)->acc(*this, fd, addr, addrlen) : (_acc ? _acc(this, fd, addr, addrlen) : 0);
 }
 
 int tcpsepoller::epoll_in()
