@@ -25,10 +25,11 @@ struct jsepoller : fdepoller
 		virtual int jshandler(jsepoller &sender, struct js_event *event) = 0;
 	};
 
-	/// @brief Joystick event handler.
-	/// @see #jshandler
-	/// @param jsepoller joystick epoller within that the event occurred
-	int (*_jshandler) (struct jsepoller *jsepoller, struct js_event *event);
+	/// @brief Called when joystick event is received.
+	/// @param sender event sender
+	/// @param event structure with information about the received joystick event
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_jshandler) (jsepoller &sender, struct js_event *event);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller

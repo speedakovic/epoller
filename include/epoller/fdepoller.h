@@ -83,45 +83,52 @@ struct fdepoller : epoller_event
 	unsigned long      epoll_err_cnt;   ///< EPOLLERR counter
 	struct receiver   *rcvr;            ///< event receiver
 
-	/// @brief Handler for rx events.
-	/// @see #rx
-	/// @param fdepoller file descriptor epoller within that the event occured
-	int (*_rx) (struct fdepoller *fdepoller, int len);
+	/// @brief Called if new data have just been received (to #rxbuff)
+	///        or some error occurred during reception.
+	/// @param sender event sender
+	/// @param len length of just received data if zero or positive, error state if negative
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_rx) (fdepoller &sender, int len);
 
-	/// @brief Handler for tx events.
-	/// @see #tx
-	/// @param fdepoller file descriptor epoller within that the event occured
-	int (*_tx) (struct fdepoller *fdepoller, int len);
+	/// @brief Called if some data have just been transmitted (from #txbuff)
+	///        or some error occurred during transmission.
+	/// @param sender event sender
+	/// @param len length of just transmitted data if zero or positive, error state if negative
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_tx) (fdepoller &sender, int len);
 
-	/// @brief Handler for pri events.
-	/// @see #pri
-	/// @param fdepoller file descriptor epoller within that the event occured
-	int (*_pri) (struct fdepoller *fdepoller);
+	/// @brief Called if ugent-data event occurred.
+	/// @param sender event sender
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_pri) (fdepoller &sender);
 
-	/// @brief Handler for hup events.
-	/// @see #hup
-	/// @param fdepoller file descriptor epoller within that the event occured
-	int (*_hup) (struct fdepoller *fdepoller);
+	/// @brief Called if hang-out event occurred.
+	/// @param sender event sender
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_hup) (fdepoller &sender);
 
-	/// @brief Handler for err events.
-	/// @see #err
-	/// @param fdepoller file descriptor epoller within that the event occured
-	int (*_err) (struct fdepoller *fdepoller);
+	/// @brief Called if error event occurred.
+	/// @param sender event sender
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_err) (fdepoller &sender);
 
-	/// @brief Handler for unknown events.
-	/// @see #un
-	/// @param fdepoller file descriptor epoller within that the event(s) occured
-	int (*_un) (struct fdepoller *fdepoller, int events);
+	/// @brief Called if unknown event occurred.
+	/// @param sender event sender
+	/// @param events unknown event flags
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_un) (fdepoller &sender, int events);
 
-	/// @brief Handler for event handler enter.
-	/// @see #enter
-	/// @param fdepoller file descriptor epoller within that the event occured
-	int (*_enter) (struct fdepoller *fdepoller, struct epoll_event *revent);
+	/// @brief Called when entering into epoller handler.
+	/// @param sender event sender
+	/// @param revent event (as is returned from epoll_wait)
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_enter) (fdepoller &sender, struct epoll_event *revent);
 
-	/// @brief Handler for event handler exit.
-	/// @see #exit
-	/// @param fdepoller file descriptor epoller within that the event occured
-	int (*_exit) (struct fdepoller *fdepoller, struct epoll_event *revent);
+	/// @brief Called when exiting (with zero) from epoller handler.
+	/// @param sender event sender
+	/// @param revent event (as is returned from epoll_wait)
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_exit) (fdepoller &sender, struct epoll_event *revent);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller

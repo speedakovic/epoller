@@ -29,10 +29,11 @@ struct sigepoller : epoller_event
 	struct epoll_event event;   ///< epoll event
 	struct receiver   *rcvr;    ///< event receiver
 
-	/// @brief Handler for signal event.
-	/// @see #sighandler
-	/// @param sigepoller signal epoller within that the signal was received
-	int (*_sighandler) (struct sigepoller *sigepoller, struct signalfd_siginfo *siginfo);
+	/// @brief Called when signal is received.
+	/// @param sender event sender
+	/// @param siginfo structure with information about the received signal
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_sighandler) (sigepoller &sender, struct signalfd_siginfo *siginfo);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller

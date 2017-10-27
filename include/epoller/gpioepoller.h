@@ -39,10 +39,11 @@ struct gpioepoller : fdepoller
 		virtual int irq(gpioepoller &sender, int value) = 0;
 	};
 
-	/// @brief Gpio irq handler.
-	/// @see #irq
-	/// @param irqepoller gpio epoller within that the irq occured
-	int (*_irq) (struct gpioepoller *gpioepoller, int value);
+	/// @brief Called if gpio irq occurs.
+	/// @param sender event sender
+	/// @param value gpio value, 0 or 1 if reading of gpio value was successful, otherwise -1
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_irq) (gpioepoller &sender, int value);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller

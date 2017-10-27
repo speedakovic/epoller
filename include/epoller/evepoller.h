@@ -30,10 +30,11 @@ struct evepoller : epoller_event
 	struct epoll_event event;   ///< epoll event
 	struct receiver   *rcvr;    ///< event receiver
 
-	/// @brief Handler for received event.
-	/// @see #recv_handler
-	/// @param evepoller event epoller within that the event was received
-	int (*_recv_handler) (struct evepoller *evepoller, uint64_t cnt);
+	/// @brief Called when event is received.
+	/// @param sender event sender
+	/// @param cnt counter
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_recv_handler) (evepoller &sender, uint64_t cnt);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller

@@ -30,10 +30,11 @@ struct timepoller : epoller_event
 	struct epoll_event event;   ///< epoll event
 	struct receiver   *rcvr;    ///< event receiver
 
-	/// @brief Handler for timer events.
-	/// @see #timerhandler
-	/// @param timepoller timer epoller within that the event occurred
-	int (*_timerhandler) (struct timepoller *timepoller, uint64_t exp);
+	/// @brief Called when timer event occurs.
+	/// @param sender event sender
+	/// @param exp number of expirations since last handler call
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_timerhandler) (timepoller &sender, uint64_t exp);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller

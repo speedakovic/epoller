@@ -107,6 +107,6 @@ int sigepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 
 int sigepoller::sighandler(struct signalfd_siginfo *siginfo)
 {
-	return rcvr ? rcvr->sighandler(*this, siginfo) : (_sighandler ? _sighandler(this, siginfo) : 0);
+	return rcvr ? rcvr->sighandler(*this, siginfo) : (_sighandler ? _sighandler(*this, siginfo) : 0);
 }
 

@@ -25,10 +25,13 @@ struct tcpsepoller : sockepoller
 		virtual int acc(tcpsepoller &sender, int fd, const struct sockaddr *addr, const socklen_t *addrlen) = 0;
 	};
 
-	/// @brief Connecting result handler.
-	/// @see #acc
-	/// @param tcpsepoller TCP server epoller within that the event occured
-	int (*_acc) (struct tcpsepoller *tcpsepoller, int fd, const struct sockaddr *addr, const socklen_t *addrlen);
+	/// @brief Called if accepting is done.
+	/// @param sender event sender
+	/// @param fd non-negative file descriptor of accepted socket or -1 indicating error with errno set appropriately
+	/// @param addr peer socket address
+	/// @param addrlen size of peer socket address
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_acc) (tcpsepoller &sender, int fd, const struct sockaddr *addr, const socklen_t *addrlen);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller

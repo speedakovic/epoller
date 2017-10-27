@@ -31,10 +31,11 @@ struct inotepoller : epoller_event
 	struct epoll_event event;   ///< epoll event
 	struct receiver   *rcvr;    ///< event receiver
 
-	/// @brief Handler for inotify event.
-	/// @see #inothandler
-	/// @param inotepoller inotify epoller within that the event occurred
-	int (*_inothandler) (struct inotepoller *inotepoller, struct inotify_event *event);
+	/// @brief Called when event occurs.
+	/// @param sender event sender
+	/// @param event structure with information about the occurred event
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_inothandler) (inotepoller &sender, struct inotify_event *event);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller

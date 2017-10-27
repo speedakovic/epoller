@@ -129,6 +129,6 @@ int inotepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 
 int inotepoller::inothandler(struct inotify_event *event)
 {
-	return rcvr ? rcvr->inothandler(*this, event) : (_inothandler ? _inothandler(this, event) : 0);
+	return rcvr ? rcvr->inothandler(*this, event) : (_inothandler ? _inothandler(*this, event) : 0);
 }
 

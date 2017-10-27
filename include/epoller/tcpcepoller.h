@@ -25,10 +25,11 @@ struct tcpcepoller : sockepoller
 
 	bool connecting; ///< connecting state flag
 
-	/// @brief Connecting result handler.
-	/// @see #con
-	/// @param tcpcepoller TCP client epoller within that the event occured
-	int (*_con) (struct tcpcepoller *tcpcepoller, bool connected);
+	/// @brief Called if connecting is done.
+	/// @param sender event sender
+	/// @param connected @c true if socket is connected, otherwise @c false and errno is set appropriately
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_con) (tcpcepoller &sender, bool connected);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller

@@ -39,9 +39,11 @@ struct mntepoller : fdepoller
 		virtual int change(mntepoller &sender, const std::list<mntentry> &entries) = 0;
 	};
 
-	/// @see change
-	/// @param mntepoller mount epoller within that the event occured
-	int (*_change) (struct mntepoller *mntepoller, const std::list<mntentry> &entries);
+	/// @brief Called whenever mount entries have changed.
+	/// @param sender event sender
+	/// @param entries mount entries
+	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+	int (*_change) (mntepoller &sender, const std::list<mntentry> &entries);
 
 	/// @brief Constructor.
 	/// @param epoller parent epoller
