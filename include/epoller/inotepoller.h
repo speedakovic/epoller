@@ -11,12 +11,11 @@
 #include <string>
 
 /// @brief Inotify epoller.
-struct inotepoller : public epoller_event
+struct inotepoller : epoller_event
 {
 	/// @brief Event receiver interface.
-	class receiver
+	struct receiver
 	{
-	public:
 		/// @brief Destructor.
 		virtual ~receiver() {}
 

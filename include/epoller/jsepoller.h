@@ -10,12 +10,11 @@
 #include <string>
 
 /// @brief Joystick epoller.
-struct jsepoller : public fdepoller
+struct jsepoller : fdepoller
 {
 	/// @brief Event receiver interface.
-	class receiver : public fdepoller::receiver
+	struct receiver : fdepoller::receiver
 	{
-	public:
 		/// @brief Destructor.
 		virtual ~receiver() {}
 

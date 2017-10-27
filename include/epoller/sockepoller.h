@@ -12,7 +12,7 @@
 #include <iostream>
 
 /// @brief General socket epoller based on file descriptor epoller.
-struct sockepoller : public fdepoller
+struct sockepoller : fdepoller
 {
 	int rx_flags; ///< flags passed to recv
 	int tx_flags; ///< flags passed to send

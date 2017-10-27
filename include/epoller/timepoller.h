@@ -10,12 +10,11 @@
 #include <sys/timerfd.h>
 
 /// @brief Timer epoller.
-struct timepoller : public epoller_event
+struct timepoller : epoller_event
 {
 	/// @brief Event receiver interface.
-	class receiver
+	struct receiver
 	{
-	public:
 		/// @brief Destructor.
 		virtual ~receiver() {}
 

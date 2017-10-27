@@ -8,7 +8,7 @@
 #include <epoller/fdepoller.h>
 
 /// @brief sysfs gpio's value file wrapper.
-struct gpioepoller : public fdepoller
+struct gpioepoller : fdepoller
 {
 	/// @brief gpio direction
 	enum DIRECTION {
@@ -27,9 +27,8 @@ struct gpioepoller : public fdepoller
 	};
 
 	/// @brief Event receiver interface.
-	class receiver : public fdepoller::receiver
+	struct receiver : fdepoller::receiver
 	{
-	public:
 		/// @brief Destructor.
 		virtual ~receiver() {}
 

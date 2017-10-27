@@ -10,12 +10,11 @@
 #include <stdint.h>
 
 /// @brief Event epoller.
-struct evepoller : public epoller_event
+struct evepoller : epoller_event
 {
 	/// @brief Event receiver interface.
-	class receiver
+	struct receiver
 	{
-	public:
 		/// @brief Destructor.
 		virtual ~receiver() {}
 

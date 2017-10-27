@@ -10,12 +10,11 @@
 #include <string>
 
 /// @brief Generic file desciptor epoller.
-struct fdepoller : public epoller_event
+struct fdepoller : epoller_event
 {
 	/// @brief Event receiver interface.
-	class receiver
+	struct receiver
 	{
-	public:
 		/// @brief Destructor.
 		virtual ~receiver() {}
 

@@ -8,10 +8,10 @@
 #include <epoller/sockepoller.h>
 
 /// @brief TCP client based on socket epoller.
-struct tcpcepoller : public sockepoller
+struct tcpcepoller : sockepoller
 {
 	/// @brief Event receiver interface.
-	struct receiver : public fdepoller::receiver
+	struct receiver : fdepoller::receiver
 	{
 		/// @brief Destructor.
 		virtual ~receiver() {}

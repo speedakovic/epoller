@@ -9,12 +9,11 @@
 #include <sys/signalfd.h>
 
 /// @brief Signal epoller.
-struct sigepoller : public epoller_event
+struct sigepoller : epoller_event
 {
 	/// @brief Event receiver interface.
-	class receiver
+	struct receiver
 	{
-	public:
 		/// @brief Destructor.
 		virtual ~receiver() {}
 

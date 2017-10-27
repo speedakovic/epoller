@@ -24,12 +24,11 @@ struct mntentry
 
 /// @brief Mount epoller. It waits for any change of mount file (typically @c /etc/mtab)
 ///        and when the change occurs appropriate callback is called.
-struct mntepoller : public fdepoller
+struct mntepoller : fdepoller
 {
 	/// @brief Event receiver interface.
-	class receiver : public fdepoller::receiver
+	struct receiver : fdepoller::receiver
 	{
-	public:
 		/// @brief Destructor.
 		virtual ~receiver() {}
 

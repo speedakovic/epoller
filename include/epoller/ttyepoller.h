@@ -9,7 +9,7 @@
 #include "termios.h"
 
 /// @brief tty epoller based on file desciptor epoller.
-struct ttyepoller : public fdepoller
+struct ttyepoller : fdepoller
 {
 	/// @brief Constructor.
 	/// @param epoller parent epoller

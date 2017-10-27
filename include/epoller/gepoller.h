@@ -17,7 +17,7 @@
 
 /// @brief Glib file descriptor wrapper.
 ///        Only for internal usage.
-struct gepoller_event : public epoller_event
+struct gepoller_event : epoller_event
 {
 	struct epoll_event  event; ///< epoll event
 	GPollFD            *gfd;   ///< glib file descriptor
@@ -47,7 +47,7 @@ struct gepoller_event : public epoller_event
 };
 
 /// @brief Epoll wrapper with glib main context processing support.
-struct gepoller : public epoller
+struct gepoller : epoller
 {
 	size_t          gevents_size; ///< size of gepoller events (and also glib file descriptors) array
 	gepoller_event *gevents;      ///< gepoller events
