@@ -89,7 +89,7 @@ bool gpioepoller::disable_irq()
 
 int gpioepoller::irq(int value)
 {
-	return _irq ? _irq(this, value) : 0;
+	return rcvr ? static_cast<receiver *>(rcvr)->irq(*this, value) : (_irq ? _irq(this, value) : 0);
 }
 
 int gpioepoller::epoll_pri()

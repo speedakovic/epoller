@@ -26,6 +26,20 @@ struct gpioepoller : public fdepoller
 		EDGE_BOTH     ///< both
 	};
 
+	/// @brief Event receiver interface.
+	class receiver : public fdepoller::receiver
+	{
+	public:
+		/// @brief Destructor.
+		virtual ~receiver() {}
+
+		/// @brief Called if gpio irq occurs.
+		/// @param sender event sender
+		/// @param value gpio value, 0 or 1 if reading of gpio value was successful, otherwise -1
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int irq(gpioepoller &sender, int value) = 0;
+	};
+
 	/// @brief Gpio irq handler.
 	/// @see #irq
 	/// @param irqepoller gpio epoller within that the irq occured
@@ -74,7 +88,11 @@ struct gpioepoller : public fdepoller
 	virtual bool disable_irq();
 
 	/// @brief Called if gpio irq occurs.
-	///        Default implementation calls #_irq if not null, otherwise returns 0.
+	///
+	/// Default implementation calls receiver::irq method of #rcvr if not null,
+	/// otherwise calls #_irq if not null,
+	/// otherwise returns 0.
+	///
 	/// @param value gpio value, 0 or 1 if reading of gpio value was successful, otherwise -1
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int irq(int value);
