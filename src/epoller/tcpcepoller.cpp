@@ -35,7 +35,7 @@ bool tcpcepoller::connect(const std::string &ip, unsigned short port)
 
 int tcpcepoller::con(bool connected)
 {
-	return _con ? _con(this, connected) : 0;
+	return rcvr ? static_cast<receiver *>(rcvr)->con(*this, connected) : (_con ? _con(this, connected) : 0);
 }
 
 int tcpcepoller::epoll_out()

@@ -10,6 +10,19 @@
 /// @brief TCP client based on socket epoller.
 struct tcpcepoller : public sockepoller
 {
+	/// @brief Event receiver interface.
+	struct receiver : public fdepoller::receiver
+	{
+		/// @brief Destructor.
+		virtual ~receiver() {}
+
+		/// @brief Called if connecting is done.
+		/// @param sender event sender
+		/// @param connected @c true if socket is connected, otherwise @c false and errno is set appropriately
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int con(tcpcepoller &sender, bool connected) = 0;
+	};
+
 	bool connecting; ///< connecting state flag
 
 	/// @brief Connecting result handler.
@@ -38,11 +51,12 @@ struct tcpcepoller : public sockepoller
 	virtual void close();
 
 	/// @brief Starts connecting.
-	///        Socket in connecting state has enabled only EPOLLOUT events.
-	///        Connecting result will be announced through #con method.
-	///        In case of any serious error any of #hup, #err or even #un methods may be called.
-	///        No #tx method will be called in connecting state as EPOLLOUT event is fully consumed by #epoll_out handler.
-	///        Neither #rx nor #pri methods will be called as these events are not enabled.
+	///
+	/// Socket in connecting state has enabled only EPOLLOUT events.
+	/// Connecting result will be announced through #con method.
+	/// In case of any serious error any of #hup, #err or even #un methods may be called.
+	/// No #tx method will be called in connecting state as EPOLLOUT event is fully consumed by #epoll_out handler.
+	/// Neither #rx nor #pri methods will be called as these events are not enabled.
 	///
 	/// @param ip ip address (IPv4/IPv6) the socket should be connected to
 	/// @param port port number the socket should be connected to
@@ -50,10 +64,15 @@ struct tcpcepoller : public sockepoller
 	virtual bool connect(const std::string &ip, unsigned short port);
 
 	/// @brief Called if connecting is done.
-	///        After connecting is done (whatever result), socket has enabled only EPOLLOUT events.
-	///        In case of any serious error any of #hup, #err or even #un methods may be called.
-	///        No #tx method will be called as the very first EPOLLOUT event was fully consumed by #epoll_out handler.
-	///        Neither #rx nor #pri methods will be called as these events are not enabled.
+	///
+	/// After connecting is done (whatever result), socket has enabled only EPOLLOUT events.
+	/// In case of any serious error any of #hup, #err or even #un methods may be called.
+	/// No #tx method will be called as the very first EPOLLOUT event was fully consumed by #epoll_out handler.
+	/// Neither #rx nor #pri methods will be called as these events are not enabled.
+	///
+	/// Default implementation calls receiver::con method of #rcvr if not null,
+	/// otherwise calls #_con if not null,
+	/// otherwise returns 0.
 	///
 	/// @param connected @c true if socket is connected, otherwise @c false and errno is set appropriately
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
