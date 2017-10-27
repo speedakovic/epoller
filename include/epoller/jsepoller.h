@@ -12,6 +12,20 @@
 /// @brief Joystick epoller.
 struct jsepoller : public fdepoller
 {
+	/// @brief Event receiver interface.
+	class receiver : public fdepoller::receiver
+	{
+	public:
+		/// @brief Destructor.
+		virtual ~receiver() {}
+
+		/// @brief Called when joystick event is received.
+		/// @param sender event sender
+		/// @param event structure with information about the received joystick event
+		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
+		virtual int jshandler(jsepoller &sender, struct js_event *event) = 0;
+	};
+
 	/// @brief Joystick event handler.
 	/// @see #jshandler
 	/// @param jsepoller joystick epoller within that the event occurred
@@ -60,7 +74,9 @@ struct jsepoller : public fdepoller
 
 	/// @brief Called when joystick event is received.
 	///
-	/// Default implementation calls #_jshandler if not null, otherwise returns 0.
+	/// Default implementation calls receiver::jshandler method of #rcvr if not null,
+	/// otherwise calls #_jshandler if not null,
+	/// otherwise returns 0.
 	///
 	/// @param event structure with information about the received joystick event
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
