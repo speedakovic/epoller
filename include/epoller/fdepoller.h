@@ -334,26 +334,32 @@ struct fdepoller : public epoller_event
 	virtual int exit(struct epoll_event *revent);
 
 	/// @brief EPOLLIN event handler.
+	///        Default implementation reads from #fd to #rxbuff and then calls rx.
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int epoll_in();
 
 	/// @brief EPOLLOUT event handler.
+	///        Default implementation writes to #fd from #txbuff and then calls tx.
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int epoll_out();
 
 	/// @brief EPOLLPRI event handler.
+	///        Default implementation calls pri.
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int epoll_pri();
 
 	/// @brief EPOLLHUP event handler.
+	///        Default implementation calls hup.
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int epoll_hup();
 
 	/// @brief EPOLLERR event handler.
+	///        Default implementation calls err.
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int epoll_err();
 
 	/// @brief Unknown events handler.
+	///        Default implementation calls unknown.
 	/// @param events unknown events
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
 	virtual int epoll_unknown(int events);
