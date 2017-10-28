@@ -86,6 +86,6 @@ int jsepoller::rx(int len)
 
 int jsepoller::jshandler(struct js_event *event)
 {
-	return rcvr ? static_cast<receiver *>(rcvr)->jshandler(*this, event) : (_jshandler ? _jshandler(*this, event) : 0);
+	return rcvr ? dynamic_cast<receiver *>(rcvr)->jshandler(*this, event) : (_jshandler ? _jshandler(*this, event) : 0);
 }
 

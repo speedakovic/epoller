@@ -27,7 +27,7 @@ struct mntentry
 struct mntepoller : fdepoller
 {
 	/// @brief Event receiver interface.
-	struct receiver : fdepoller::receiver
+	struct receiver : virtual fdepoller::receiver
 	{
 		/// @brief Destructor.
 		virtual ~receiver() {}

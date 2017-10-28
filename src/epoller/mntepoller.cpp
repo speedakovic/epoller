@@ -78,7 +78,7 @@ int mntepoller::done()
 
 int mntepoller::change(const std::list<mntentry> &entries)
 {
-	return rcvr ? static_cast<receiver *>(rcvr)->change(*this, entries) : (_change ? _change(*this, entries) : 0);
+	return rcvr ? dynamic_cast<receiver *>(rcvr)->change(*this, entries) : (_change ? _change(*this, entries) : 0);
 }
 
 bool mntepoller::read(std::list<mntentry> &entries, const std::string &pathname)
