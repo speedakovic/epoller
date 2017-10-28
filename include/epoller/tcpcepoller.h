@@ -11,7 +11,7 @@
 struct tcpcepoller : sockepoller
 {
 	/// @brief Event receiver interface.
-	struct receiver : virtual fdepoller::receiver
+	struct receiver : virtual sockepoller::receiver
 	{
 		/// @brief Destructor.
 		virtual ~receiver() {}
