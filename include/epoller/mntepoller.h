@@ -85,7 +85,7 @@ struct mntepoller : fdepoller
 	///
 	/// Default implementation calls receiver::change method of #rcvr if not null,
 	/// otherwise calls #_change if not null,
-	/// otherwise returns 0.
+	/// otherwise returns -1.
 	///
 	/// @param entries mount entries
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error

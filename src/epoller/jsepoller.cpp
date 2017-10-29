@@ -92,6 +92,13 @@ int jsepoller::rx(int len)
 
 int jsepoller::jshandler(struct js_event *event)
 {
-	return rcvr ? dynamic_cast<receiver *>(rcvr)->jshandler(*this, event) : (_jshandler ? _jshandler(*this, event) : 0);
+	if (rcvr)
+		return dynamic_cast<receiver *>(rcvr)->jshandler(*this, event);
+	else if (_jshandler)
+		return _jshandler(*this, event);
+	else {
+		std::cerr << DBG_PREFIX"unhandled event: jshandler" << std::endl;
+		return -1;
+	}
 }
 

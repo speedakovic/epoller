@@ -135,6 +135,13 @@ int inotepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 
 int inotepoller::inothandler(struct inotify_event *event)
 {
-	return rcvr ? rcvr->inothandler(*this, event) : (_inothandler ? _inothandler(*this, event) : 0);
+	if (rcvr)
+		return rcvr->inothandler(*this, event);
+	else if (_inothandler)
+		return _inothandler(*this, event);
+	else {
+		std::cerr << DBG_PREFIX"unhandled event: inothandler" << std::endl;
+		return -1;
+	}
 }
 

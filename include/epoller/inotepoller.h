@@ -73,7 +73,7 @@ struct inotepoller : epoller_event
 	///
 	/// Default implementation calls receiver::inothandler method of #rcvr if not null,
 	/// otherwise calls #_inothandler if not null,
-	/// otherwise returns 0.
+	/// otherwise returns -1.
 	///
 	/// @param event structure with information about the occurred event
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error

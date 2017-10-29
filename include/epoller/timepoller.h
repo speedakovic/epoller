@@ -121,7 +121,7 @@ struct timepoller : epoller_event
 	///
 	/// Default implementation calls receiver::timerhandler method of #rcvr if not null,
 	/// otherwise calls #_timerhandler if not null,
-	/// otherwise returns 0.
+	/// otherwise returns -1.
 	///
 	/// @param exp number of expirations since last handler call
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error

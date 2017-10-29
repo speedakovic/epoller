@@ -229,6 +229,13 @@ int timepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 
 int timepoller::timerhandler(uint64_t exp)
 {
-	return rcvr ? rcvr->timerhandler(*this, exp) : (_timerhandler ? _timerhandler(*this, exp) : 0);
+	if (rcvr)
+		return rcvr->timerhandler(*this, exp);
+	else if (_timerhandler)
+		return _timerhandler(*this, exp);
+	else {
+		std::cerr << DBG_PREFIX"unhandled event: timerhandler" << std::endl;
+		return -1;
+	}
 }
 

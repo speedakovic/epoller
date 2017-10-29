@@ -113,6 +113,13 @@ int sigepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 
 int sigepoller::sighandler(struct signalfd_siginfo *siginfo)
 {
-	return rcvr ? rcvr->sighandler(*this, siginfo) : (_sighandler ? _sighandler(*this, siginfo) : 0);
+	if (rcvr)
+		return rcvr->sighandler(*this, siginfo);
+	else if (_sighandler)
+		return _sighandler(*this, siginfo);
+	else {
+		std::cerr << DBG_PREFIX"unhandled event: sighandler" << std::endl;
+		return -1;
+	}
 }
 

@@ -77,7 +77,7 @@ struct jsepoller : fdepoller
 	///
 	/// Default implementation calls receiver::jshandler method of #rcvr if not null,
 	/// otherwise calls #_jshandler if not null,
-	/// otherwise returns 0.
+	/// otherwise returns -1.
 	///
 	/// @param event structure with information about the received joystick event
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error

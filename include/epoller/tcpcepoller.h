@@ -74,7 +74,7 @@ struct tcpcepoller : sockepoller
 	///
 	/// Default implementation calls receiver::con method of #rcvr if not null,
 	/// otherwise calls #_con if not null,
-	/// otherwise returns 0.
+	/// otherwise returns -1.
 	///
 	/// @param connected @c true if socket is connected, otherwise @c false and errno is set appropriately
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error

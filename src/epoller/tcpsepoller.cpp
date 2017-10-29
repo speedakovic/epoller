@@ -37,7 +37,14 @@ bool tcpsepoller::socket(int domain, const std::string &ip, unsigned short port,
 
 int tcpsepoller::acc(int fd, const struct sockaddr *addr, const socklen_t *addrlen)
 {
-	return rcvr ? dynamic_cast<receiver *>(rcvr)->acc(*this, fd, addr, addrlen) : (_acc ? _acc(*this, fd, addr, addrlen) : 0);
+	if (rcvr)
+		return dynamic_cast<receiver *>(rcvr)->acc(*this, fd, addr, addrlen);
+	else if (_acc)
+		return _acc(*this, fd, addr, addrlen);
+	else {
+		std::cerr << DBG_PREFIX"unhandled event: acc" << std::endl;
+		return -1;
+	}
 }
 
 int tcpsepoller::epoll_in()

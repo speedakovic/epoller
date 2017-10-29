@@ -330,15 +330,8 @@ int fdepoller::rx(int len)
 	else if (_rx)
 		return _rx(*this, len);
 	else {
-		std::cerr << DBG_PREFIX"rx event, len = " << len << std::endl;
-		if (len == 0)
-			return 1;
-		else if (len < 0)
-			return -1;
-		else {
-			linbuff_clear(&rxbuff);
-			return 0;
-		}
+		std::cerr << DBG_PREFIX"unhandled event: rx" << std::endl;
+		return -1;
 	}
 }
 
@@ -349,15 +342,8 @@ int fdepoller::tx(int len)
 	else if (_tx)
 		return _tx(*this, len);
 	else {
-		std::cerr << DBG_PREFIX"tx event, len = " << len << std::endl;
-		if (len == 0)
-			return 1;
-		else if (len < 0)
-			return -1;
-		else {
-			linbuff_compact(&txbuff);
-			return 0;
-		}
+		std::cerr << DBG_PREFIX"unhandled event: tx" << std::endl;
+		return -1;
 	}
 }
 
@@ -368,7 +354,7 @@ int fdepoller::pri()
 	else if (_pri)
 		return _pri(*this);
 	else {
-		std::cerr << DBG_PREFIX"urgent-data event" << std::endl;
+		std::cerr << DBG_PREFIX"unhandled event: pri" << std::endl;
 		return -1;
 	}
 }
@@ -380,7 +366,7 @@ int fdepoller::hup()
 	else if (_hup)
 		return _hup(*this);
 	else {
-		std::cerr << DBG_PREFIX"hang-out event" << std::endl;
+		std::cerr << DBG_PREFIX"unhandled event: hup" << std::endl;
 		return -1;
 	}
 }
@@ -392,7 +378,7 @@ int fdepoller::err()
 	else if (_err)
 		return _err(*this);
 	else {
-		std::cerr << DBG_PREFIX"error event" << std::endl;
+		std::cerr << DBG_PREFIX"unhandled event: err" << std::endl;
 		return -1;
 	}
 }
@@ -404,7 +390,7 @@ int fdepoller::un(int events)
 	else if (_un)
 		return _un(*this, events);
 	else {
-		std::cerr << DBG_PREFIX"unknown event" << std::endl;
+		std::cerr << DBG_PREFIX"unhandled event: un" << std::endl;
 		return -1;
 	}
 }

@@ -41,7 +41,14 @@ bool tcpcepoller::connect(const std::string &ip, unsigned short port)
 
 int tcpcepoller::con(bool connected)
 {
-	return rcvr ? dynamic_cast<receiver *>(rcvr)->con(*this, connected) : (_con ? _con(*this, connected) : 0);
+	if (rcvr)
+		return dynamic_cast<receiver *>(rcvr)->con(*this, connected);
+	else if (_con)
+		return _con(*this, connected);
+	else {
+		std::cerr << DBG_PREFIX"unhandled event: con" << std::endl;
+		return -1;
+	}
 }
 
 int tcpcepoller::epoll_out()

@@ -273,7 +273,7 @@ struct fdepoller : epoller_event
 	///
 	/// Default implementation calls receiver::rx method of #rcvr if not null,
 	/// otherwise calls #_rx if not null,
-	/// otherwise returns 0 if len is positive, 1 if len is zero or -1 if len is negative.
+	/// otherwise returns -1.
 	///
 	/// @param len length of just received data if zero or positive, error state if negative
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
@@ -284,7 +284,7 @@ struct fdepoller : epoller_event
 	///
 	/// Default implementation calls receiver::tx method of #rcvr if not null,
 	/// otherwise calls #_tx if not null,
-	/// otherwise returns 0 if len is positive, 1 if len is zero or -1 if len is negative.
+	/// otherwise returns -1.
 	///
 	/// @param len length of just transmitted data if zero or positive, error state if negative
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error

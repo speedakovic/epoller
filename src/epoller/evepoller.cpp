@@ -123,6 +123,13 @@ int evepoller::handler(struct epoller *epoller, struct epoll_event *revent)
 
 int evepoller::recv_handler(uint64_t cnt)
 {
-	return rcvr ? rcvr->recv_handler(*this, cnt) : (_recv_handler ? _recv_handler(*this, cnt) : 0);
+	if (rcvr)
+		return rcvr->recv_handler(*this, cnt);
+	else if (_recv_handler)
+		return _recv_handler(*this, cnt);
+	else {
+		std::cerr << DBG_PREFIX"unhandled event: recv_handler" << std::endl;
+		return -1;
+	}
 }
 

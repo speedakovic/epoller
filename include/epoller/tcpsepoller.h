@@ -54,7 +54,7 @@ struct tcpsepoller : sockepoller
 	///
 	/// Default implementation calls receiver::acc method of #rcvr if not null,
 	/// otherwise calls #_acc if not null,
-	/// otherwise returns 0.
+	/// otherwise returns -1.
 	///
 	/// @param fd non-negative file descriptor of accepted socket or -1 indicating error with errno set appropriately
 	/// @param addr peer socket address

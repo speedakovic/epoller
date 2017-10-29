@@ -92,7 +92,7 @@ struct gpioepoller : fdepoller
 	///
 	/// Default implementation calls receiver::irq method of #rcvr if not null,
 	/// otherwise calls #_irq if not null,
-	/// otherwise returns 0.
+	/// otherwise returns -1.
 	///
 	/// @param value gpio value, 0 or 1 if reading of gpio value was successful, otherwise -1
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error

@@ -68,7 +68,7 @@ struct evepoller : epoller_event
 	///
 	/// Default implementation calls receiver::recv_handler method of #rcvr if not null,
 	/// otherwise calls #_recv_handler if not null,
-	/// otherwise returns 0.
+	/// otherwise returns -1.
 	///
 	/// @param cnt counter
 	/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error

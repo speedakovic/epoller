@@ -95,7 +95,14 @@ bool gpioepoller::disable_irq()
 
 int gpioepoller::irq(int value)
 {
-	return rcvr ? dynamic_cast<receiver *>(rcvr)->irq(*this, value) : (_irq ? _irq(*this, value) : 0);
+	if (rcvr)
+		return dynamic_cast<receiver *>(rcvr)->irq(*this, value);
+	else if (_irq)
+		return _irq(*this, value);
+	else {
+		std::cerr << DBG_PREFIX"unhandled event: irq" << std::endl;
+		return -1;
+	}
 }
 
 int gpioepoller::epoll_pri()
