@@ -138,11 +138,16 @@ bool timepoller::arm_periodic_msec(uint64_t msec, uint64_t init_msec, int flags)
 	ts.tv_sec  =  msec / 1000ULL;
 	ts.tv_nsec = (msec % 1000ULL) * 1000000ULL;
 
-	struct timespec init_ts = {};
-	init_ts.tv_sec  =  init_msec / 1000ULL;
-	init_ts.tv_nsec = (init_msec % 1000ULL) * 1000000ULL;
+	if (init_msec) {
 
-	return arm_periodic(&ts, &init_ts, flags);
+		struct timespec init_ts = {};
+		init_ts.tv_sec  =  init_msec / 1000ULL;
+		init_ts.tv_nsec = (init_msec % 1000ULL) * 1000000ULL;
+
+		return arm_periodic(&ts, &init_ts, flags);
+
+	} else
+		return arm_periodic(&ts, 0, flags);
 }
 
 bool timepoller::arm_periodic_usec(uint64_t usec, uint64_t init_usec, int flags)
@@ -151,11 +156,16 @@ bool timepoller::arm_periodic_usec(uint64_t usec, uint64_t init_usec, int flags)
 	ts.tv_sec  =  usec / 1000000ULL;
 	ts.tv_nsec = (usec % 1000000ULL) * 1000ULL;
 
-	struct timespec init_ts = {};
-	init_ts.tv_sec  =  init_usec / 1000000ULL;
-	init_ts.tv_nsec = (init_usec % 1000000ULL) * 1000ULL;
+	if (init_usec) {
 
-	return arm_periodic(&ts, &init_ts, flags);
+		struct timespec init_ts = {};
+		init_ts.tv_sec  =  init_usec / 1000000ULL;
+		init_ts.tv_nsec = (init_usec % 1000000ULL) * 1000ULL;
+
+		return arm_periodic(&ts, &init_ts, flags);
+
+	} else
+		return arm_periodic(&ts, 0, flags);
 }
 
 bool timepoller::arm(const struct itimerspec *val, int flags)

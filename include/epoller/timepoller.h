@@ -72,14 +72,14 @@ struct timepoller : epoller_event
 
 	/// @brief Arms the oneshot timer.
 	/// @see timerfd_settime syscall documentation
-	/// @param msec period in milliseconds
+	/// @param msec period in milliseconds, must be greater than zero
 	/// @param flags see timerfd_settime syscall documentation
 	/// @return @c true if timer was armed successfully, otherwise @c false
 	bool arm_oneshot_msec(uint64_t msec, int flags = 0);
 
 	/// @brief Arms the oneshot timer.
 	/// @see timerfd_settime syscall documentation
-	/// @param usec period in microseconds
+	/// @param usec period in microseconds, must be greater than zero
 	/// @param flags see timerfd_settime syscall documentation
 	/// @return @c true if timer was armed successfully, otherwise @c false
 	bool arm_oneshot_usec(uint64_t usec, int flags = 0);
@@ -91,16 +91,16 @@ struct timepoller : epoller_event
 
 	/// @brief Arms the periodic timer.
 	/// @see timerfd_settime syscall documentation
-	/// @param msec period in milliseconds
-	/// @param init_msec initial period in milliseconds
+	/// @param msec period in milliseconds, must be greater than zero
+	/// @param init_msec initial period in milliseconds, zero means no (not zero) initial period (the first shot occurs after msec period)
 	/// @param flags see timerfd_settime syscall documentation
 	/// @return @c true if timer was armed successfully, otherwise @c false
 	bool arm_periodic_msec(uint64_t msec, uint64_t init_msec = 0, int flags = 0);
 
 	/// @brief Arms the periodic timer.
 	/// @see timerfd_settime syscall documentation
-	/// @param usec period in microseconds
-	/// @param init_usec initial period in microseconds
+	/// @param usec period in microseconds, must be greater than zero
+	/// @param init_usec initial period in microseconds, zero means no (not zero) initial period (the first shot occurs after usec period)
 	/// @param flags see timerfd_settime syscall documentation
 	/// @return @c true if timer was armed successfully, otherwise @c false
 	bool arm_periodic_usec(uint64_t usec, uint64_t init_usec = 0, int flags = 0);
