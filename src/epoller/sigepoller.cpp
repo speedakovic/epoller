@@ -6,6 +6,12 @@
 
 #define DBG_PREFIX "sigepoller: "
 
+int sigepoller::receiver::sighandler(sigepoller &sender, struct signalfd_siginfo *siginfo)
+{
+	std::cerr << DBG_PREFIX"unhandled event: sighandler" << std::endl;
+	return -1;
+}
+
 bool sigepoller::init(const sigset_t *sigset)
 {
 	int ret;

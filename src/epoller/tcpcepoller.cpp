@@ -4,6 +4,12 @@
 
 #define DBG_PREFIX "tcpcepoller: "
 
+int tcpcepoller::receiver::con(tcpcepoller &sender, bool connected)
+{
+	std::cerr << DBG_PREFIX"unhandled event: con" << std::endl;
+	return -1;
+}
+
 bool tcpcepoller::socket(int domain, size_t rxsize, size_t txsize)
 {
 	if (!sockepoller::socket(domain, SOCK_STREAM | O_NONBLOCK, 0, rxsize, txsize, false, false, false))

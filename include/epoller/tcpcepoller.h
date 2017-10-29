@@ -17,10 +17,11 @@ struct tcpcepoller : sockepoller
 		virtual ~receiver() {}
 
 		/// @brief Called if connecting is done.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @param connected @c true if socket is connected, otherwise @c false and errno is set appropriately
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int con(tcpcepoller &sender, bool connected) = 0;
+		virtual int con(tcpcepoller &sender, bool connected);
 	};
 
 	bool connecting; ///< connecting state flag

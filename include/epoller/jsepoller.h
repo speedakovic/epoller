@@ -19,10 +19,11 @@ struct jsepoller : fdepoller
 		virtual ~receiver() {}
 
 		/// @brief Called when joystick event is received.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @param event structure with information about the received joystick event
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int jshandler(jsepoller &sender, struct js_event *event) = 0;
+		virtual int jshandler(jsepoller &sender, struct js_event *event);
 	};
 
 	/// @brief Called when joystick event is received.

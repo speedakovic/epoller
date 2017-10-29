@@ -33,10 +33,11 @@ struct mntepoller : fdepoller
 		virtual ~receiver() {}
 
 		/// @brief Called whenever mount entries have changed.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @param entries mount entries
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int change(mntepoller &sender, const std::list<mntentry> &entries) = 0;
+		virtual int change(mntepoller &sender, const std::list<mntentry> &entries);
 	};
 
 	/// @brief Called whenever mount entries have changed.

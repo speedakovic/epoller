@@ -17,12 +17,13 @@ struct tcpsepoller : sockepoller
 		virtual ~receiver() {}
 
 		/// @brief Called if accepting is done.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @param fd non-negative file descriptor of accepted socket or -1 indicating error with errno set appropriately
 		/// @param addr peer socket address
 		/// @param addrlen size of peer socket address
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int acc(tcpsepoller &sender, int fd, const struct sockaddr *addr, const socklen_t *addrlen) = 0;
+		virtual int acc(tcpsepoller &sender, int fd, const struct sockaddr *addr, const socklen_t *addrlen);
 	};
 
 	/// @brief Called if accepting is done.

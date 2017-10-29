@@ -22,6 +22,12 @@ static inline mntentry parse_entry(const std::string sline)
 	return entry;
 }
 
+int mntepoller::receiver::change(mntepoller &sender, const std::list<mntentry> &entries)
+{
+	std::cerr << DBG_PREFIX"unhandled event: change" << std::endl;
+	return -1;
+}
+
 bool mntepoller::open(const std::string &pathname)
 {
 	if (!fdepoller::open(pathname,

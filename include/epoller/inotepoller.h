@@ -20,10 +20,11 @@ struct inotepoller : epoller_event
 		virtual ~receiver() {}
 
 		/// @brief Called when event occurs.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @param event structure with information about the occurred event
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int inothandler(inotepoller &sender, struct inotify_event *event) = 0;
+		virtual int inothandler(inotepoller &sender, struct inotify_event *event);
 	};
 
 	int                fd;      ///< inotify file descriptor

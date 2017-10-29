@@ -19,10 +19,11 @@ struct timepoller : epoller_event
 		virtual ~receiver() {}
 
 		/// @brief Called when timer event occurs.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @param exp number of expirations since last handler call
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int timerhandler(timepoller &sender, uint64_t exp) = 0;
+		virtual int timerhandler(timepoller &sender, uint64_t exp);
 	};
 
 	int                fd;      ///< timer file descriptor

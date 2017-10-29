@@ -20,50 +20,58 @@ struct fdepoller : epoller_event
 
 		/// @brief Called if new data have just been received (to #rxbuff)
 		///        or some error occurred during reception.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @param len length of just received data if zero or positive, error state if negative
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int rx(fdepoller &sender, int len) = 0;
+		virtual int rx(fdepoller &sender, int len);
 
 		/// @brief Called if some data have just been transmitted (from #txbuff)
 		///        or some error occurred during transmission.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @param len length of just transmitted data if zero or positive, error state if negative
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int tx(fdepoller &sender, int len) = 0;
+		virtual int tx(fdepoller &sender, int len);
 
 		/// @brief Called if ugent-data event occurred.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int pri(fdepoller &sender) = 0;
+		virtual int pri(fdepoller &sender);
 
 		/// @brief Called if hang-out event occurred.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int hup(fdepoller &sender) = 0;
+		virtual int hup(fdepoller &sender);
 
 		/// @brief Called if error event occurred.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int err(fdepoller &sender) = 0;
+		virtual int err(fdepoller &sender);
 
 		/// @brief Called if unknown event occurred.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @param events unknown event flags
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int un(fdepoller &sender, int events) = 0;
+		virtual int un(fdepoller &sender, int events);
 
 		/// @brief Called when entering into epoller handler.
+		///        Default implementation returns 0.
 		/// @param sender event sender
 		/// @param revent event (as is returned from epoll_wait)
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int enter(fdepoller &sender, struct epoll_event *revent) = 0;
+		virtual int enter(fdepoller &sender, struct epoll_event *revent);
 
 		/// @brief Called when exiting (with zero) from epoller handler.
+		///        Default implementation returns 0.
 		/// @param sender event sender
 		/// @param revent event (as is returned from epoll_wait)
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int exit(fdepoller &sender, struct epoll_event *revent) = 0;
+		virtual int exit(fdepoller &sender, struct epoll_event *revent);
 	};
 
 	int                fd;              ///< file descriptor

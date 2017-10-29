@@ -33,10 +33,11 @@ struct gpioepoller : fdepoller
 		virtual ~receiver() {}
 
 		/// @brief Called if gpio irq occurs.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @param value gpio value, 0 or 1 if reading of gpio value was successful, otherwise -1
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int irq(gpioepoller &sender, int value) = 0;
+		virtual int irq(gpioepoller &sender, int value);
 	};
 
 	/// @brief Called if gpio irq occurs.

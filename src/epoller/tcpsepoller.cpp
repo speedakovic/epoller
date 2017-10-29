@@ -3,6 +3,12 @@
 
 #define DBG_PREFIX "tcpsepoller: "
 
+int tcpsepoller::receiver::acc(tcpsepoller &sender, int fd, const struct sockaddr *addr, const socklen_t *addrlen)
+{
+	std::cerr << DBG_PREFIX"unhandled event: acc" << std::endl;
+	return -1;
+}
+
 bool tcpsepoller::socket(int domain, const std::string &ip, unsigned short port, int backlog, bool reuseaddr)
 {
 	if (fd != -1)

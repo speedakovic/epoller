@@ -18,10 +18,11 @@ struct sigepoller : epoller_event
 		virtual ~receiver() {}
 
 		/// @brief Called when signal is received.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @param siginfo structure with information about the received signal
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int sighandler(sigepoller &sender, struct signalfd_siginfo *siginfo) = 0;
+		virtual int sighandler(sigepoller &sender, struct signalfd_siginfo *siginfo);
 	};
 
 	int                fd;      ///< signal file descriptor

@@ -4,6 +4,12 @@
 
 #define DBG_PREFIX "jsepoller: "
 
+int jsepoller::receiver::jshandler(jsepoller &sender, struct js_event *event)
+{
+	std::cerr << DBG_PREFIX"unhandled event: jshandler" << std::endl;
+	return -1;
+}
+
 bool jsepoller::open(const std::string &pathname, size_t evbuff)
 {
 	if (!fdepoller::open(pathname,

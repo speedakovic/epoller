@@ -8,6 +8,52 @@
 
 #define DBG_PREFIX "fdepoller: "
 
+int fdepoller::receiver::rx(fdepoller &sender, int len)
+{
+	std::cerr << DBG_PREFIX"unhandled event: rx" << std::endl;
+	return -1;
+}
+
+int fdepoller::receiver::tx(fdepoller &sender, int len)
+{
+	std::cerr << DBG_PREFIX"unhandled event: tx" << std::endl;
+	return -1;
+}
+
+int fdepoller::receiver::pri(fdepoller &sender)
+{
+	std::cerr << DBG_PREFIX"unhandled event: pri" << std::endl;
+	return -1;
+}
+
+int fdepoller::receiver::hup(fdepoller &sender)
+{
+	std::cerr << DBG_PREFIX"unhandled event: hup" << std::endl;
+	return -1;
+}
+
+int fdepoller::receiver::err(fdepoller &sender)
+{
+	std::cerr << DBG_PREFIX"unhandled event: err" << std::endl;
+	return -1;
+}
+
+int fdepoller::receiver::un(fdepoller &sender, int events)
+{
+	std::cerr << DBG_PREFIX"unhandled event: un" << std::endl;
+	return -1;
+}
+
+int fdepoller::receiver::enter(fdepoller &sender, struct epoll_event *revent)
+{
+	return 0;
+}
+
+int fdepoller::receiver::exit(fdepoller &sender, struct epoll_event *revent)
+{
+	return 0;
+}
+
 bool fdepoller::init(int fd, size_t rxsize, size_t txsize, bool rxen, bool txen, bool en)
 {
 	// check file descriptor

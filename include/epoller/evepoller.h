@@ -19,10 +19,11 @@ struct evepoller : epoller_event
 		virtual ~receiver() {}
 
 		/// @brief Called when event is received.
+		///        Default implementation returns -1.
 		/// @param sender event sender
 		/// @param cnt counter
 		/// @return zero for loop continuation, positive for normal loop exit, negative for loop exit with error
-		virtual int recv_handler(evepoller &sender, uint64_t cnt) = 0;
+		virtual int recv_handler(evepoller &sender, uint64_t cnt);
 	};
 
 	int                fd;      ///< event file descriptor

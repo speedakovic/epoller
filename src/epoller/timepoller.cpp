@@ -6,6 +6,12 @@
 
 #define DBG_PREFIX "timepoller: "
 
+int timepoller::receiver::timerhandler(timepoller &sender, uint64_t exp)
+{
+	std::cerr << DBG_PREFIX"unhandled event: timerhandler" << std::endl;
+	return -1;
+}
+
 bool timepoller::init(int clockid)
 {
 	int ret;

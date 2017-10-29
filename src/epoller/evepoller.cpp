@@ -6,6 +6,12 @@
 
 #define DBG_PREFIX "evepoller: "
 
+int evepoller::receiver::recv_handler(evepoller &sender, uint64_t cnt)
+{
+	std::cerr << DBG_PREFIX"unhandled event: recv_handler" << std::endl;
+	return -1;
+}
+
 bool evepoller::init(unsigned int cnt, int flags)
 {
 	int ret;

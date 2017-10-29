@@ -9,6 +9,12 @@
 #define DBG_PREFIX "gpioepoller: "
 #define GPIO_DIR   "/sys/class/gpio"
 
+int gpioepoller::receiver::irq(gpioepoller &sender, int value)
+{
+	std::cerr << DBG_PREFIX"unhandled event: irq" << std::endl;
+	return -1;
+}
+
 bool gpioepoller::init(int fd)
 {
 	if (this->fd != -1)

@@ -7,6 +7,12 @@
 
 #define DBG_PREFIX "inotepoller: "
 
+int inotepoller::receiver::inothandler(inotepoller &sender, struct inotify_event *event)
+{
+	std::cerr << DBG_PREFIX"unhandled event: inothandler" << std::endl;
+	return -1;
+}
+
 bool inotepoller::init()
 {
 	int ret;
