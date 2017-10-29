@@ -69,6 +69,7 @@ int mntepoller::err()
 
 int mntepoller::done()
 {
+	int ret;
 	std::string sline;
 	std::list<mntentry> entries;
 	std::stringstream sslines(std::string((char *)LINBUFF_RD_PTR(&rxbuff), linbuff_tord(&rxbuff)));
@@ -76,7 +77,9 @@ int mntepoller::done()
 	while (std::getline(sslines, sline))
 		entries.push_back(parse_entry(sline));
 
-	change(entries);
+	if ((ret = change(entries)))
+		return ret;
+
 	linbuff_clear(&rxbuff);
 
 	return 0;
