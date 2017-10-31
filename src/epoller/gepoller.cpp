@@ -5,6 +5,10 @@
 
 #define DBG_PREFIX "gepoller: "
 
+#ifndef GEPOLLER_EVENTS_COMPATIBLE
+	#define GEPOLLER_EVENTS_COMPATIBLE 1
+#endif
+
 int gepoller_event::handler(struct epoller *epoller, struct epoll_event *revent)
 {
 	if (!gfd) {
@@ -54,7 +58,7 @@ bool gepoller_event::del_from_epoller(struct epoller *epoller)
 
 int gepoller_event::events_glib2epoll(int events)
 {
-#ifdef GEPOLLER_EVENTS_COMPATIBLE
+#if GEPOLLER_EVENTS_COMPATIBLE
 	return events;
 #else
 	int ev = 0;
@@ -74,7 +78,7 @@ int gepoller_event::events_glib2epoll(int events)
 
 int gepoller_event::events_epoll2glib(int events)
 {
-#ifdef GEPOLLER_EVENTS_COMPATIBLE
+#if GEPOLLER_EVENTS_COMPATIBLE
 	return events;
 #else
 	int ev = 0;

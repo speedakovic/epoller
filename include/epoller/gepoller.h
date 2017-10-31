@@ -8,10 +8,6 @@
 #include <epoller/epoller.h>
 #include <glib.h>
 
-/// @brief If defined, then system and glib poll flags are considered as compatible,
-///        so no translation will be performed.
-#define GEPOLLER_EVENTS_COMPATIBLE
-
 /// @brief Default number of processed glib file descriptors.
 #define GEPOLLER_GEVENTS_SIZE 32
 
