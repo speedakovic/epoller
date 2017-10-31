@@ -28,6 +28,7 @@ set(SOURCES_LINBUFF
     src/linbuff/linbuff.c)
 
 set(HEADERS_EPOLLER
+    include/epoller/version.h
     include/epoller/epoller.h
     include/epoller/evepoller.h
     include/epoller/fdepoller.h
