@@ -1,4 +1,5 @@
 #include <epoller/epoller.h>
+#include <errno.h>
 #include <unistd.h>
 #include <cstdio>
 #include <iostream>
@@ -55,7 +56,9 @@ bool epoller::loop()
 		}
 
 		// call epoll wait
-		ret = epoll_wait(fd, revents, revents_size, timeout);
+		do {
+			ret = epoll_wait(fd, revents, revents_size, timeout);
+		} while (ret == -1 && errno == EINTR);
 
 		// call post-epoll handler
 		if (post_epoll_handler) {

@@ -1,4 +1,5 @@
 #include <epoller/gepoller.h>
+#include <errno.h>
 #include <cstdio>
 #include <cstring>
 #include <iostream>
@@ -150,7 +151,9 @@ bool gepoller::loop()
 			to = std::min(timeout, g_timeout);
 
 		// call epoll wait
-		ret = epoll_wait(fd, revents, revents_size, to);
+		do {
+			ret = epoll_wait(fd, revents, revents_size, to);
+		} while (ret == -1 && errno == EINTR);
 
 		// call post-epoll handler
 		if (post_epoll_handler) {
